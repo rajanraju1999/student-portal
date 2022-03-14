@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: Student-Data-Portal-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/student-data-portal_schema?useSSL=false
+    username: user35
+    password: anits123*
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: update
+      show_sql: true
+server:
+  port: 7777
+
+
