@@ -26,7 +26,7 @@ public class StudentController {
     @PostMapping("/create")
     public ResponseEntity<?> createstudent(@RequestBody StudentDO studentDO)
     {
-        System.out.println("hi");
+       
            studentservices.createstudent(studentDO);
            return new ResponseEntity<>(HttpStatus.OK);
     }
