@@ -25,6 +25,7 @@ public class StudentCourseDO {
 
     private String courseid;
 
+    private String coursename;
 
     private  String grade;
 

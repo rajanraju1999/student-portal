@@ -100,10 +100,20 @@ public class StudentCourseController {
 
             }
 
-    @GetMapping("/getAllbybatchidandsection/{id}/{id1}")
-    public ResponseEntity<List<StudentCourseDO>> getAllbybatchidAndSection(@PathVariable String id,@PathVariable String id1) {
+    @GetMapping("/getAllbybatchidandsectionandsemester/{id}/{id1}/{id2}")
+    public ResponseEntity<List<StudentCourseDO>> getAllbybatchidAndSection(@PathVariable String id,@PathVariable String id1,@PathVariable Long id2) {
 
-        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllbybatchidAndSection(id,id1);
+        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllbybatchidandsectionandsemester(id,id1,id2);
+        if (studentCourseDOList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(studentCourseDOList, HttpStatus.OK);
+
+    }
+    @GetMapping("/getAllbybatchidandsemester/{id}/{id1}")
+    public ResponseEntity<List<StudentCourseDO>> getAllbybatchidandsemester(@PathVariable String id,@PathVariable Long id1) {
+
+        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllbybatchidandsemester(id,id1);
         if (studentCourseDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

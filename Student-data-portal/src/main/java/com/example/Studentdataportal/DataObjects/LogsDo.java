@@ -17,6 +17,7 @@ public class LogsDo {
     private long id;
     private String studentid;
     private String courseid;
+    private String coursename;
     private String attemptdate;
     private String grade;
     private Long attemptnumber;

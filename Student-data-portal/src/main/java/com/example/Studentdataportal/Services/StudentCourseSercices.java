@@ -186,13 +186,13 @@ public class StudentCourseSercices {
 
         }
 
-    public List<StudentCourseDO>  getAllbybatchidAndSection(String batchid,String section) {
+    public List<StudentCourseDO>  getAllbybatchidandsectionandsemester(String batchid,String section,Long sem) {
         List<StudentCourseDO> studentCourseDOList =new ArrayList<>();
         List<StudentCourseEntity> studentCourseEntityList = studentCourseRepository.findAll();
         List<StudentCourseEntity> studentCourseEntityList1= new ArrayList<>();
         for(int j=0;j<studentCourseEntityList.size();j++)
         {
-            if(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid)&&studentCourseEntityList.get(j).getStudentid().getSection().equals(section))
+            if(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid)&&studentCourseEntityList.get(j).getStudentid().getSection().equals(section)&& studentCourseEntityList.get(j).getSemester()==sem)
             {
                 studentCourseEntityList1.add(studentCourseEntityList.get(j));
             }
@@ -205,6 +205,29 @@ public class StudentCourseSercices {
         return studentCourseDOList;
 
     }
+
+    public List<StudentCourseDO>  getAllbybatchidandsemester(String batchid,Long sem) {
+        List<StudentCourseDO> studentCourseDOList =new ArrayList<>();
+        List<StudentCourseEntity> studentCourseEntityList = studentCourseRepository.findAll();
+        List<StudentCourseEntity> studentCourseEntityList1= new ArrayList<>();
+        for(int j=0;j<studentCourseEntityList.size();j++)
+        {
+            if(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid) && studentCourseEntityList.get(j).getSemester()==sem)
+            {
+                studentCourseEntityList1.add(studentCourseEntityList.get(j));
+            }
+        }
+
+        for(int i=0;i<studentCourseEntityList1.size();i++)
+        {
+            studentCourseDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(i)));
+        }
+        return studentCourseDOList;
+
+    }
+
+
+
 
     public List<StudentCourseDO> getAllbyid(String id) {
         List<StudentCourseDO> studentCourseDOList =new ArrayList<>();
