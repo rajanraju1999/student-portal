@@ -5,18 +5,25 @@ import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Entitis.CourseEntity;
 import com.example.Studentdataportal.Entitis.StudentCourseEntity;
 import com.example.Studentdataportal.Entitis.StudentEntity;
+import com.example.Studentdataportal.Repositorys.CourseRepository;
+import com.example.Studentdataportal.Repositorys.StudentCourseRepository;
+import com.example.Studentdataportal.Repositorys.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StudentCourseConvert {
 
-
-   /* public StudentCourseEntity convert2StudentCourseEntity(StudentCourseDO studentCourseDO)
+@Autowired
+StudentRepository studentRepository;
+    @Autowired
+    CourseRepository courseRepository;
+    public StudentCourseEntity convert2StudentCourseEntity(StudentCourseDO studentCourseDO)
     {
-        return StudentCourseEntity.builder().studentid(studentCourseDO.getStudentid()).grade(studentCourseDO.getGrade()).courseid(studentCourseDO.getCourseid())
-                .semester(studentCourseDO.getSemester()).build();
+        return StudentCourseEntity.builder().studentid(studentRepository.getByRollnumber(studentCourseDO.getStudentid())).grade(studentCourseDO.getGrade()).courseid(courseRepository.getByCourseid(studentCourseDO.getCourseid()))
+                .semester(studentCourseDO.getSemester()).examdate(studentCourseDO.getExamdate()).build();
 
-    }*/
+    }
 
     public StudentCourseDO convert2StudentCourseDO(StudentCourseEntity studentCourseEntity)
     {

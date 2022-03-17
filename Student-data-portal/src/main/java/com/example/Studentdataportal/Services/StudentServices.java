@@ -1,5 +1,4 @@
 package com.example.Studentdataportal.Services;
-
 import com.example.Studentdataportal.DataObjects.BatchDO;
 import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Entitis.BatchEntity;
@@ -15,7 +14,6 @@ import com.example.Studentdataportal.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +38,14 @@ public class StudentServices {
     {
 
 
-        if(studentDO.getId()==null||studentDO.getId().trim().isEmpty()||studentDO.getEmailid()==null||studentDO.getEmailid().trim().isEmpty()||studentDO.getName()==null||studentDO.getName().trim().isEmpty()||studentDO.getBatchid()==null||studentDO.getBatchid().trim().isEmpty()||studentDO.getSection()==null||studentDO.getSection().trim().isEmpty()||studentDO.getYearofjoining()==null||studentDO.getYearofjoining().trim().isEmpty())
+        if(studentDO.getRollnumber()==null||studentDO.getRollnumber().trim().isEmpty()||studentDO.getEmailid()==null||studentDO.getEmailid().trim().isEmpty()||studentDO.getName()==null||studentDO.getName().trim().isEmpty()||studentDO.getBatchid()==null||studentDO.getBatchid().trim().isEmpty()||studentDO.getSection()==null||studentDO.getSection().trim().isEmpty()||studentDO.getYearofjoining()==null||studentDO.getYearofjoining().trim().isEmpty())
         {
             throw new EmptyFieldException();
         }
         //handle field missing exception!
-        if(studentRepository.existsById(studentDO.getId()))
+        if(studentRepository.existsById(studentDO.getRollnumber()))
         {
-            throw new AlreadyStudentExistsException(studentDO.getId());
+            throw new AlreadyStudentExistsException(studentDO.getRollnumber());
         }
         if(studentRepository.existsByemailid(studentDO.getEmailid())){
 
@@ -202,15 +200,15 @@ public class StudentServices {
 
         //handle empty feeld
 
-        if(studentDO.getId()==null|| studentDO.getId().isEmpty())
+        if(studentDO.getRollnumber()==null|| studentDO.getRollnumber().isEmpty())
         {
             throw new EmptyRollNumberException();
         }
-        if(!studentRepository.existsById(studentDO.getId())) {
+        if(!studentRepository.existsById(studentDO.getRollnumber())) {
             throw new NoSuchElementException();
         }
 
-            StudentEntity studentEntity= studentRepository.getById(studentDO.getId());
+            StudentEntity studentEntity= studentRepository.getById(studentDO.getRollnumber());
 
             if(studentDO.getName()!=null)
             {
@@ -243,8 +241,13 @@ public class StudentServices {
     }
     public void savefile(MultipartFile file) {
         try {
-            List<StudentEntity> studentEntityList = Helper.studentExcelToDB(file.getInputStream(),studentRepository,batchRepository);
+            List<StudentDO> studentDOList = Helper.studentExcelToDB(file.getInputStream(),studentRepository,batchRepository);
             //  System.out.println(studentCourseEntityList);
+            List<StudentEntity>  studentEntityList =new ArrayList<>();
+            for(int i=0;i<studentDOList.size();i++)
+            {
+                studentEntityList.add(studentConvert.convert2StudentEntity(studentDOList.get(i)));
+            }
             try {
                 studentRepository.saveAll(studentEntityList);
             }catch (Exception e){

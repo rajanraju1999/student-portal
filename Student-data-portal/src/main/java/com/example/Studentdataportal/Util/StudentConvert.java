@@ -15,14 +15,14 @@ public class StudentConvert {
     BatchRepository batchRepository;
     public StudentEntity convert2StudentEntity(StudentDO studentDO)
     {
-       return StudentEntity.builder().rollnumber(studentDO.getId()).emailid(studentDO.getEmailid()).name(studentDO.getName())
+       return StudentEntity.builder().rollnumber(studentDO.getRollnumber()).emailid(studentDO.getEmailid()).name(studentDO.getName())
                 .batchid( batchRepository.getByBatch(studentDO.getBatchid())).section(studentDO.getSection()).yearofjoining(studentDO.getYearofjoining()).build();
 
     }
 
     public StudentDO convert2StudentDO(StudentEntity studententity)
     {
-        return StudentDO.builder().id(studententity.getRollnumber()).emailid(studententity.getEmailid()).name(studententity.getName())
+        return StudentDO.builder().rollnumber(studententity.getRollnumber()).emailid(studententity.getEmailid()).name(studententity.getName())
                 .batchid(studententity.getBatchid().getBatch()).section(studententity.getSection()).yearofjoining(studententity.getYearofjoining()).build();
 
     }

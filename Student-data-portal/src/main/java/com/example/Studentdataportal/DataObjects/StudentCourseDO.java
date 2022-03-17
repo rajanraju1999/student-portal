@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.util.Date;
 
 
@@ -36,5 +37,11 @@ public class StudentCourseDO {
 
     private long semester;
     private String examdate;
+
+
+    private String sgpa;
+
+    private String cgpa;
+
 
 }

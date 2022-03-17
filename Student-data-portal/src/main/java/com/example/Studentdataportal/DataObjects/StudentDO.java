@@ -18,7 +18,7 @@ import javax.persistence.Entity;
 public class StudentDO {
 
 
-    private String id;
+    private String rollnumber;
     private String name;
     private String emailid;
     private String section;

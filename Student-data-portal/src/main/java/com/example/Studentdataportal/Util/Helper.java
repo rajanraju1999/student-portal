@@ -1,5 +1,8 @@
 package com.example.Studentdataportal.Util;
 
+import com.example.Studentdataportal.DataObjects.StudentCourseDO;
+import com.example.Studentdataportal.DataObjects.StudentDO;
+import com.example.Studentdataportal.Entitis.CgpaAndSgpaEntity;
 import com.example.Studentdataportal.Entitis.CourseEntity;
 import com.example.Studentdataportal.Entitis.StudentCourseEntity;
 import com.example.Studentdataportal.Entitis.StudentEntity;
@@ -33,7 +36,7 @@ public class Helper {
         return true;
     }
 
-    public static List<StudentCourseEntity> excelToDbadvsupAndsup(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry, Long sem, String type,String date,String regulation) {
+    public static List<StudentCourseDO> excelToDbadvsupAndsup(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry, Long sem, String type,String date,String regulation) {
         System.out.println(type);
 
         DataFormatter formatter = new DataFormatter();
@@ -42,7 +45,7 @@ public class Helper {
             XSSFWorkbook workbook = new XSSFWorkbook(is);
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
-            List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+            List<StudentCourseDO> studentCourseDOList = new ArrayList<>();
 
             //rollnumber,a,b,a,c
             List<String> grades = new ArrayList<>();
@@ -62,7 +65,7 @@ public class Helper {
             // System.out.println(sub);
 
             //excel name error handling
-            for (int i = 1; i < sub.size(); i++) {
+            for (int i = 1; i < sub.size()-2; i++) {
                 if (!courseRepository.existsByCourseNameAndCourseRegulation(sub.get(i),regulation)) {
                     String string = sub.get(i);
                     throw new CourseNameErrorInExcelException(string,regulation);
@@ -86,8 +89,8 @@ public class Helper {
                 }
                 // System.out.println(grades);
 
-                for (int i = 1; i < grades.size(); i++) {
-                    StudentCourseEntity studentCourseEntity = new StudentCourseEntity();
+                for (int i = 1; i < grades.size()-2; i++) {
+                    StudentCourseDO studentCourseDO = new StudentCourseDO();
                     //if student does not  exist in database  but exists in Excel
                     if(grades.get(0)==null||grades.get(0).trim().isEmpty())
                     {
@@ -97,18 +100,20 @@ public class Helper {
                         throw new StudentNotExistsInDBException(grades.get(0));
                     }
                     if(!grades.get(i).isEmpty()) {
-                        studentCourseEntity.setStudentid(studentRepository.getByRollnumber(grades.get(0)));
-                        studentCourseEntity.setCourseid(courseRepository.getByCourseNameAndCourseRegulation(sub.get(i),regulation));
-                        studentCourseEntity.setGrade(grades.get(i));
-                        studentCourseEntity.setSemester(sem);
-                        studentCourseEntity.setExamdate(date);
-                        studentCourseEntityList.add(studentCourseEntity);
+                        studentCourseDO.setStudentid(studentRepository.getByRollnumber(grades.get(0)).getRollnumber());
+                        studentCourseDO.setCourseid(courseRepository.getByCourseNameAndCourseRegulation(sub.get(i),regulation).getCourseid());
+                        studentCourseDO.setGrade(grades.get(i));
+                        studentCourseDO.setSemester(sem);
+                        studentCourseDO.setExamdate(date);
+                        studentCourseDO.setSgpa(grades.get(grades.size()-2));
+                        studentCourseDO.setCgpa(grades.get(grades.size()-1));
+                        studentCourseDOList.add(studentCourseDO);
                     }
                     // System.out.println(studentCourseEntityList);
                 }
             }
             workbook.close();
-            return studentCourseEntityList;
+            return studentCourseDOList;
         } catch (IOException e) {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
@@ -126,7 +131,7 @@ public class Helper {
 
 
 
-    public static List<StudentCourseEntity> excelToDb(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry, Long sem, String type,String date,String regulation) {
+    public static List<StudentCourseDO> excelToDb(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry, Long sem, String type, String date, String regulation) {
         System.out.println(type);
 
         DataFormatter formatter = new DataFormatter();
@@ -135,7 +140,7 @@ public class Helper {
             XSSFWorkbook workbook = new XSSFWorkbook(is);
             XSSFSheet sheet = workbook.getSheetAt(0);
             Iterator<Row> rows = sheet.iterator();
-            List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+            List<StudentCourseDO> studentCourseDOList = new ArrayList<>();
 
             //rollnumber,a,b,a,c
             List<String> grades = new ArrayList<>();
@@ -155,7 +160,7 @@ public class Helper {
             // System.out.println(sub);
 
             //excel name error handling
-            for (int i = 1; i < sub.size(); i++) {
+            for (int i = 1; i < sub.size()-2; i++) {
                 if (!courseRepository.existsByCourseNameAndCourseRegulation(sub.get(i),regulation)) {
                     String string = sub.get(i);
                     throw new CourseNameErrorInExcelException(string,regulation);
@@ -172,9 +177,9 @@ public class Helper {
                 grades.clear();
                 while (cellsInRow.hasNext()) {
                     Cell currentCell = cellsInRow.next();
-                    if(currentCell == null || currentCell.getCellType() == CellType.BLANK){
+                  /*  if(currentCell == null || currentCell.getCellType() == CellType.BLANK){
                         throw new EmptyFieldException();
-                    }
+                    }*/
                    // if(!(currentCell ==null))
                     //{
                         grades.add(formatter.formatCellValue(currentCell));
@@ -183,8 +188,8 @@ public class Helper {
                 }
                 // System.out.println(grades);
 
-                for (int i = 1; i < grades.size(); i++) {
-                    StudentCourseEntity studentCourseEntity = new StudentCourseEntity();
+                for (int i = 1; i < grades.size()-2; i++) {
+                    StudentCourseDO studentCourseDO = new StudentCourseDO();
                     //if student does not  exist in database  but exists in Excel
                     if (!studentRepository.existsById(grades.get(0))) {
                         throw new StudentNotExistsInDBException(grades.get(0));
@@ -197,18 +202,26 @@ public class Helper {
                         CourseEntity courseEntity=courseRepository.getByCourseNameAndCourseRegulation(sub.get(i),regulation);
                         throw new AlreadyEntryExistsException(studentEntity.getRollnumber(),courseEntity.getCourseid());
                     }
-                    studentCourseEntity.setStudentid(studentRepository.getByRollnumber(grades.get(0)));
-                    studentCourseEntity.setCourseid(courseRepository.getByCourseNameAndCourseRegulation(sub.get(i),regulation));
-                    studentCourseEntity.setGrade(grades.get(i));
-                    studentCourseEntity.setSemester(sem);
-                    studentCourseEntity.setExamdate(date);
-                    studentCourseEntityList.add(studentCourseEntity);
+                    studentCourseDO.setStudentid(studentRepository.getByRollnumber(grades.get(0)).getRollnumber());
+                    studentCourseDO.setCourseid(courseRepository.getByCourseNameAndCourseRegulation(sub.get(i),regulation).getCourseid());
+                    studentCourseDO.setGrade(grades.get(i));
+                    studentCourseDO.setSemester(sem);
+                    studentCourseDO.setExamdate(date);
+                    studentCourseDO.setSgpa(grades.get(grades.size()-2));
+                    studentCourseDO.setCgpa(grades.get(grades.size()-1));
+                    studentCourseDOList.add(studentCourseDO);
 
                     // System.out.println(studentCourseEntityList);
                 }
+
+                  /*  CgpaAndSgpaEntity cgpaAndSgpaEntity = new CgpaAndSgpaEntity();
+                    cgpaAndSgpaEntity.setStudentid(studentRepository.getByRollnumber(grades.get(0)));
+                    cgpaAndSgpaEntity.setSgpa1(grades.get(grades.size()-1));
+                    cgpaAndSgpaEntity.setCgpa(grades.get(grades.size()-2));*/
+
             }
             workbook.close();
-            return studentCourseEntityList;
+            return studentCourseDOList;
         } catch (IOException e) {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }
@@ -220,7 +233,7 @@ public class Helper {
 
 
 
-    public static List<StudentEntity> studentExcelToDB(InputStream is, StudentRepository studentRepository, BatchRepository batchRepository) {
+    public static List<StudentDO> studentExcelToDB(InputStream is, StudentRepository studentRepository, BatchRepository batchRepository) {
 
 
         DataFormatter formatter = new DataFormatter();
@@ -233,7 +246,7 @@ public class Helper {
                 throw new SheetProblemException();
             }
             Iterator<Row> rows = sheet.iterator();
-            List<StudentEntity> studentEntityList = new ArrayList<>();
+            List<StudentDO> studentDOList = new ArrayList<>();
 
             rows.next();
             while (rows.hasNext()) {
@@ -241,7 +254,7 @@ public class Helper {
                 Row currentRow = rows.next();
 
                 Iterator<Cell> cellsInRow = currentRow.iterator();
-                StudentEntity studentEntity = new StudentEntity();
+                StudentDO studentDO = new StudentDO();
                 int cellIdx = 0;
                 while (cellsInRow.hasNext()) {
 
@@ -255,36 +268,36 @@ public class Helper {
                             {
                                 throw new AlreadyStudentExistsException(formatter.formatCellValue(currentCell));
                             }
-                            studentEntity.setRollnumber(formatter.formatCellValue(currentCell));
+                            studentDO.setRollnumber(formatter.formatCellValue(currentCell));
                             break;
                         case 1:
-                            studentEntity.setName(formatter.formatCellValue(currentCell));
+                            studentDO.setName(formatter.formatCellValue(currentCell));
                             break;
                         case 2:
-                            studentEntity.setEmailid(formatter.formatCellValue(currentCell));
+                            studentDO.setEmailid(formatter.formatCellValue(currentCell));
                             break;
                         //case 3:
                           //  studentEntity.setYear(formatter.formatCellValue(currentCell));
                           //  break;
                         case 3:
-                            studentEntity.setSection(formatter.formatCellValue(currentCell));
+                            studentDO.setSection(formatter.formatCellValue(currentCell));
                             break;
                         case 4:
-                            studentEntity.setBatchid(batchRepository.getByBatch(formatter.formatCellValue(currentCell)));
+                            studentDO.setBatchid(batchRepository.getByBatch(formatter.formatCellValue(currentCell)).getBatch());
                             break;
                         case 5:
-                            studentEntity.setYearofjoining(formatter.formatCellValue(currentCell));
+                            studentDO.setYearofjoining(formatter.formatCellValue(currentCell));
                             break;
                         default:
                             break;
                     }
                     cellIdx++;
                 }
-                studentEntityList.add(studentEntity);
+                studentDOList.add(studentDO);
             }
             workbook.close();
             //studentEntityList.remove(studentEntityList.size() - 1);
-            return studentEntityList;
+            return studentDOList;
         } catch (IOException e) {
             throw new RuntimeException("fail to parse Excel file: " + e.getMessage());
         }

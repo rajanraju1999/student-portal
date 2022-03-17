@@ -2,8 +2,7 @@ package com.example.Studentdataportal.Controllers;
 
 import com.example.Studentdataportal.DataObjects.LogsDo;
 import com.example.Studentdataportal.DataObjects.StudentCourseDO;
-import com.example.Studentdataportal.DataObjects.StudentDO;
-import com.example.Studentdataportal.Services.StudentCourseSercices;
+import com.example.Studentdataportal.Services.StudentCourseServices;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequestMapping("/studentcourse")
 public class StudentCourseController {
         @Autowired
-        StudentCourseSercices studentCourseSercices;
+        StudentCourseServices studentCourseServices;
 
     @PostMapping("/uploadsupply/{id}/{id1}/{id2}/{id3}")
     public ResponseEntity<ResponseMessage> uploadSupplyFile(@PathVariable("file") MultipartFile file,@PathVariable("id") Long sem,@PathVariable("id1") String type,@PathVariable("id2")String dateString,@PathVariable("id3")String regulation) {
@@ -28,7 +27,7 @@ public class StudentCourseController {
 
             //try {s
             System.out.println(dateString);
-            studentCourseSercices.saveSupply(file,sem,type, dateString,regulation);
+            studentCourseServices.saveSupply(file,sem,type, dateString,regulation);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             // } //catch (Exception e) {
@@ -48,7 +47,7 @@ public class StudentCourseController {
 
             //try {s
             System.out.println(dateString);
-            studentCourseSercices.save(file,sem,type, dateString,regulation);
+            studentCourseServices.save(file,sem,type, dateString,regulation);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             // } //catch (Exception e) {
@@ -68,7 +67,7 @@ public class StudentCourseController {
 
             //try {s
             System.out.println(dateString);
-            studentCourseSercices.saveadvsup(file,sem,type, dateString,regulation);
+            studentCourseServices.saveadvsup(file,sem,type, dateString,regulation);
             message = "Uploaded the file successfully: " + file.getOriginalFilename();
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
             // } //catch (Exception e) {
@@ -84,7 +83,7 @@ public class StudentCourseController {
 
     @PutMapping("/updatestudentcourse")
     public ResponseEntity<ResponseMessage> updateStudentCourse(@RequestBody StudentCourseDO studentCourseDO){
-        studentCourseSercices.updateStudentCourse(studentCourseDO);
+        studentCourseServices.updateStudentCourse(studentCourseDO);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -92,7 +91,7 @@ public class StudentCourseController {
     @GetMapping("/getAllbybatchid/{id}")
         public ResponseEntity<List<StudentCourseDO>> getAllbybatchid(@PathVariable String id) {
 
-                List<StudentCourseDO> studentCourseDOList = studentCourseSercices. getAllbybatchid(id);
+                List<StudentCourseDO> studentCourseDOList = studentCourseServices. getAllbybatchid(id);
                 if (studentCourseDOList.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }
@@ -103,7 +102,7 @@ public class StudentCourseController {
     @GetMapping("/getAllbybatchidandsectionandsemester/{id}/{id1}/{id2}")
     public ResponseEntity<List<StudentCourseDO>> getAllbybatchidAndSection(@PathVariable String id,@PathVariable String id1,@PathVariable Long id2) {
 
-        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllbybatchidandsectionandsemester(id,id1,id2);
+        List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsectionandsemester(id,id1,id2);
         if (studentCourseDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -113,7 +112,7 @@ public class StudentCourseController {
     @GetMapping("/getAllbybatchidandsemester/{id}/{id1}")
     public ResponseEntity<List<StudentCourseDO>> getAllbybatchidandsemester(@PathVariable String id,@PathVariable Long id1) {
 
-        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllbybatchidandsemester(id,id1);
+        List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsemester(id,id1);
         if (studentCourseDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -124,7 +123,7 @@ public class StudentCourseController {
     @GetMapping("/getAll/{id}")
     public ResponseEntity<List<StudentCourseDO>> getAll(@PathVariable String id) {
 
-        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllbyid(id);
+        List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbyid(id);
         if (studentCourseDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -136,7 +135,7 @@ public class StudentCourseController {
     @GetMapping("/getAllByidAndSem/{id}/{id2}")
     public ResponseEntity<List<StudentCourseDO>> getAllByIdAndSem(@PathVariable String id,@PathVariable long id2) {
 
-        List<StudentCourseDO> studentCourseDOList = studentCourseSercices.getAllByIdAndSem(id,id2);
+        List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllByIdAndSem(id,id2);
         if (studentCourseDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -147,7 +146,7 @@ public class StudentCourseController {
     @GetMapping("/getlogs/{id}/{id2}")
     public ResponseEntity<List<LogsDo>> getlogs(@PathVariable String id,@PathVariable String id2) {
 
-        List<LogsDo> logsDoList = studentCourseSercices.getlogs(id,id2);
+        List<LogsDo> logsDoList = studentCourseServices.getlogs(id,id2);
         if (logsDoList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
