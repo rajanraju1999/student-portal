@@ -90,5 +90,21 @@ public class MyControllerAdvice {
     public ResponseEntity<String> BatchDoesNotExistException(BatchDoesNotExistException exc) {
         return new ResponseEntity<>("NO Such Batch Exists "+exc.getString(), HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(NoCourseNameAndRegulationException.class)
+    public ResponseEntity<String> NoCourseNameAndRegulationException(NoCourseNameAndRegulationException exc) {
+        return new ResponseEntity<>("no entry exists with this course Name "+ exc.getString() +" and regulation "+exc.getString1(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyCourseNameExistForGivenBatchException.class)
+    public ResponseEntity<String> AlreadyCourseNameExistForGivenBatchException(AlreadyCourseNameExistForGivenBatchException exc) {
+        return new ResponseEntity<>("Already table entry exists with this batch "+ exc.getString1() +" and course Name "+exc.getString2(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchCourseNameExistForGivenBatchException.class)
+    public ResponseEntity<String> NoSuchCourseNameExistForGivenBatchException(NoSuchCourseNameExistForGivenBatchException exc) {
+        return new ResponseEntity<>("no such table entry exists with this batch "+ exc.getString1() +" and course Name "+exc.getString2(), HttpStatus.BAD_REQUEST);
+    }
+
+
 }
 

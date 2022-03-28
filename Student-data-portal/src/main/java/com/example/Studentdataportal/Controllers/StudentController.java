@@ -3,6 +3,7 @@ package com.example.Studentdataportal.Controllers;
 import com.example.Studentdataportal.DataObjects.BatchDO;
 import com.example.Studentdataportal.DataObjects.LogsDo;
 import com.example.Studentdataportal.DataObjects.StudentDO;
+import com.example.Studentdataportal.Services.BatchService;
 import com.example.Studentdataportal.Services.StudentServices;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.ResponseMessage;
@@ -20,7 +21,8 @@ public class StudentController {
 
     @Autowired
     StudentServices studentservices;
-
+    @Autowired
+    BatchService batchService;
 
 
     @PostMapping("/create")
@@ -124,5 +126,15 @@ public class StudentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/GetAllBatches")
+    public ResponseEntity<List<BatchDO>> getAllBatchs() {
+
+        List<BatchDO> batchesDOList = batchService.getallbatches();
+        if (batchesDOList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(batchesDOList, HttpStatus.OK);
+
+    }
 
 }
