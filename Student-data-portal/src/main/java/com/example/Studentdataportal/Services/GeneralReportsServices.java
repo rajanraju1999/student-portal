@@ -82,9 +82,32 @@ public class GeneralReportsServices {
 
    }
 
+        int fail=0;
+        Set<StudentEntity> studentEntitySet =new HashSet<>();
+        List<StudentCourseEntity> studentCourseEntityList4= new ArrayList<>();
+
+        int passcount=0;
+        for(int i=0;i<studentEntityList.size();i++) {
+            studentCourseEntityList4 = studentCourseRepository.getAllByStudentidAndSemester(studentEntityList.get(i), sem);
+
+            int flag=0;
+            for (int j = 0; j < studentCourseEntityList4.size(); j++) {
+                if (studentCourseEntityList4.get(j).getGrade().equals("F")) {
 
 
-   return generalReportDOList;
+                    flag=1;
+                    break;
+                }
+            }
+            if(flag==0)
+            {
+                passcount++;
+            }
+            studentCourseEntityList4.clear();
+        }
+        System.out.println(studentCourseEntityList4);
+        generalReportDOList.add(GeneralReportDO.builder().noofstudentsappeared(studentEntityList.size()).noofstudentspassed(passcount).overalpasspercentage(  (int)  (( (float) passcount/studentEntityList.size() )*100)).build());
+        return generalReportDOList;
 
     }
 
