@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL )
-public class LogsDo {
+public class LogsDO {
     private long id;
     private String studentid;
     private String courseid;

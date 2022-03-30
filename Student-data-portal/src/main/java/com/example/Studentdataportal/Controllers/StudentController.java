@@ -1,7 +1,6 @@
 package com.example.Studentdataportal.Controllers;
 
 import com.example.Studentdataportal.DataObjects.BatchDO;
-import com.example.Studentdataportal.DataObjects.LogsDo;
 import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Services.BatchService;
 import com.example.Studentdataportal.Services.StudentServices;

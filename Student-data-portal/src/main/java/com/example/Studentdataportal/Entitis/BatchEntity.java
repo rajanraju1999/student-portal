@@ -20,7 +20,8 @@ public class BatchEntity {
     @Column(name = "batch")
     private String batch;
 
-
+    @Column(name = "regulation")
+    private String regulation;
 
 
 }

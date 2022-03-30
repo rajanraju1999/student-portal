@@ -5,6 +5,8 @@ import com.example.Studentdataportal.Entitis.StudentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CourseRepository extends JpaRepository<CourseEntity,String> {
 
@@ -18,5 +20,7 @@ public interface CourseRepository extends JpaRepository<CourseEntity,String> {
     public boolean existsByCourseNameAndCourseRegulation(String courseName,String courseregulation);
     
     CourseEntity getByCourseNameAndCourseRegulation(String courseName,String courseregulation);
+
+
 
 }

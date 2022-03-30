@@ -15,4 +15,6 @@ public class BatchDO {
 
     private String batch_id;
 
+    private String regulation;
+
 }

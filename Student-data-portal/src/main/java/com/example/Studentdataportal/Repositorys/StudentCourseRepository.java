@@ -22,6 +22,8 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourseEnti
 
     List<StudentCourseEntity>findAllByStudentid(StudentEntity studentid);
     List<StudentCourseEntity>getAllByStudentid(StudentEntity studentid);
-
+    List<StudentCourseEntity>getAllByStudentidAndSemester(StudentEntity studentid,long semester);
     StudentCourseEntity getByStudentidAndCourseid(StudentEntity studentId, CourseEntity courseId);
+    List<StudentCourseEntity>getAllByCourseidAndSemester( CourseEntity courseId,long semester);
+    List<StudentCourseEntity>getAllBySemester(long semester);
 }

@@ -1,6 +1,6 @@
 package com.example.Studentdataportal.Services;
 
-import com.example.Studentdataportal.DataObjects.LogsDo;
+import com.example.Studentdataportal.DataObjects.LogsDO;
 import com.example.Studentdataportal.DataObjects.StudentCourseDO;
 import com.example.Studentdataportal.Entitis.*;
 import com.example.Studentdataportal.Repositorys.*;
@@ -518,8 +518,8 @@ public class StudentCourseServices {
 
 
 
-    public List<LogsDo> getlogs(String studentid,String courseid) {
-        List<LogsDo> logsDoList =new ArrayList<>();
+    public List<LogsDO> getlogs(String studentid, String courseid) {
+        List<LogsDO> logsDOList =new ArrayList<>();
         if(!studentCourseLogRepository.existsByStudentidAndCourseid(studentRepository.getByRollnumber(studentid),courseRepository.getByCourseid(courseid)))
         {
             throw new NoSuchElementException();
@@ -528,9 +528,9 @@ public class StudentCourseServices {
 
         for(int i=0;i<studentCourseLogEntityList.size();i++)
         {
-            logsDoList.add(logsConvert.convert2logsDO(studentCourseLogEntityList.get(i)));
+            logsDOList.add(logsConvert.convert2logsDO(studentCourseLogEntityList.get(i)));
         }
-        return logsDoList;
+        return logsDOList;
 
     }
 

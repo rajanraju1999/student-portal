@@ -1,6 +1,6 @@
 package com.example.Studentdataportal.Controllers;
 
-import com.example.Studentdataportal.DataObjects.LogsDo;
+import com.example.Studentdataportal.DataObjects.LogsDO;
 import com.example.Studentdataportal.DataObjects.StudentCourseDO;
 import com.example.Studentdataportal.Services.StudentCourseServices;
 import com.example.Studentdataportal.Util.Helper;
@@ -144,13 +144,13 @@ public class StudentCourseController {
     }
 
     @GetMapping("/getlogs/{id}/{id2}")
-    public ResponseEntity<List<LogsDo>> getlogs(@PathVariable String id,@PathVariable String id2) {
+    public ResponseEntity<List<LogsDO>> getlogs(@PathVariable String id, @PathVariable String id2) {
 
-        List<LogsDo> logsDoList = studentCourseServices.getlogs(id,id2);
-        if (logsDoList.isEmpty()) {
+        List<LogsDO> logsDOList = studentCourseServices.getlogs(id,id2);
+        if (logsDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(logsDoList, HttpStatus.OK);
+        return new ResponseEntity<>(logsDOList, HttpStatus.OK);
 
     }
 
