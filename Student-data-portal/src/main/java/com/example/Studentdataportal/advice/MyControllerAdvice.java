@@ -105,6 +105,14 @@ public class MyControllerAdvice {
         return new ResponseEntity<>("no such table entry exists with this batch "+ exc.getString1() +" and course Name "+exc.getString2(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(wrongColumnNameException.class)
+    public ResponseEntity<String> wrongColumnNameException(wrongColumnNameException exc) {
+        return new ResponseEntity<>(exc.getColumn_name()+" is the wrong column name in the sheet header , you shoulg use "+exc.getCorrect_column_name() , HttpStatus.BAD_REQUEST);
+    }
 
+    @ExceptionHandler(wrongNameException.class)
+    public ResponseEntity<String> wrongNameException(wrongNameException exc) {
+        return new ResponseEntity<>(exc.getColumn_name()+" is the wrong  name in the COs column  , you shoulg use "+exc.getCorrect_column_name() , HttpStatus.BAD_REQUEST);
+    }
 }
 

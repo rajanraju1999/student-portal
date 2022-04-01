@@ -42,11 +42,62 @@ public class NewHelper {
                 throw new SheetProblemException();
             }
 
+            Iterator<Row> check_rows = sheet.iterator();
+
+            Row cur_row = check_rows.next();
+            Iterator<Cell> check_cellsInRow = cur_row.iterator();
+            //check first header column
+            Cell cur_Cell = check_cellsInRow.next();
+            if(!formatter.formatCellValue(cur_Cell).equals("COs")){
+                throw new wrongColumnNameException(formatter.formatCellValue(cur_Cell),"COs");
+            }
+            cur_Cell = check_cellsInRow.next();
+            if(!formatter.formatCellValue(cur_Cell).equals("VALUES")){
+                throw new wrongColumnNameException(formatter.formatCellValue(cur_Cell),"VALUES");
+            }
+            cur_Cell = check_cellsInRow.next();
+            for(int h=1; h<=12 ; h++) {
+                if(!formatter.formatCellValue(cur_Cell).equals("PO"+h)) {
+                    throw new wrongColumnNameException(formatter.formatCellValue(cur_Cell), "PO"+h);
+                }
+                cur_Cell = check_cellsInRow.next();
+            }
+            if(!formatter.formatCellValue(cur_Cell).equals("PSO"+1)) {
+                throw new wrongColumnNameException(formatter.formatCellValue(cur_Cell), "PSO"+1);
+            }
+            cur_Cell = check_cellsInRow.next();
+            if(!formatter.formatCellValue(cur_Cell).equals("PSO"+2)) {
+                throw new wrongColumnNameException(formatter.formatCellValue(cur_Cell), "PSO"+2);
+            }
+
+            int row_num=1;
+            while(check_rows.hasNext()) {
+                cur_row = check_rows.next();
+                check_cellsInRow = cur_row.iterator();
+                cur_Cell = check_cellsInRow.next();
+                if(!formatter.formatCellValue(cur_Cell).equals("CO"+row_num)) {
+                    System.out.println(check_rows.hasNext());
+                    if (check_rows.hasNext() && formatter.formatCellValue(cur_Cell).equals("RESULT")) {
+                        throw new wrongNameException(formatter.formatCellValue(cur_Cell), "CO" + row_num);
+                    } else if (!formatter.formatCellValue(cur_Cell).equals("RESULT") && !check_rows.hasNext()) {
+                        throw new wrongNameException(formatter.formatCellValue(cur_Cell), "RESULT");
+                    }else if(!check_rows.hasNext() && formatter.formatCellValue(cur_Cell).equals("RESULT")){
+                        break;
+                    }
+                    else {
+                        throw new wrongNameException(formatter.formatCellValue(cur_Cell), "CO" + row_num);
+                    }
+                }
+                row_num++;
+            }
+
             Iterator<Row> rows = sheet.iterator();
 
             List<AttainmentDO> attainmentDOList = new ArrayList<>();
 
             rows.next();
+
+
             while (rows.hasNext()) {
 
                 Row currentRow = rows.next();
