@@ -24,10 +24,12 @@ public class AttainmentController {
     @Autowired
     AttainmentServices attainmentServices;
     
-    @GetMapping("/getallattainments")
-    public ResponseEntity<String> getallattinments()
+    @GetMapping("/getallattainments/{id}")
+    public ResponseEntity<List<AttainmentDO>> getallattinments(@PathVariable("id") String batch)
     {
-        return new ResponseEntity<>("working", HttpStatus.OK);
+        List<AttainmentDO> AttainmentDoList;
+        AttainmentDoList = attainmentServices.getAllAttinmentsOfBatch(batch);
+        return new ResponseEntity<>(AttainmentDoList, HttpStatus.OK);
     }
 
     @GetMapping("/attainmentsreport/{id}")

@@ -74,6 +74,17 @@ public class AttainmentServices {
         System.out.println(batchRepository.getByBatch(batch)+" "+courseRepository.getByCourseName(courseName));
         attainmentRepository.deleteAllByBatchidAndCourseid(batchRepository.getByBatch(batch),courseRepository.getByCourseName(courseName));
     }
+
+    public List<AttainmentDO> getAllAttinmentsOfBatch(String batch){
+        List<AttainmentEntity> attainmentEntityList = attainmentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+        List<AttainmentDO> attainmentDOList = new ArrayList<>();;
+        for(int h = 1 ; h < attainmentEntityList.size() ; h++){
+            attainmentDOList.add(attainmentConvert.convert2AttainmentDO(attainmentEntityList.get(h)));
+        }
+        return attainmentDOList;
+    }
+
+
     public List<AttainmentReportDO> getattainmentreport(String batch){
         Set<CourseEntity> courseset = new HashSet<CourseEntity>();
         List<AttainmentEntity> attainmentEntityList = attainmentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
