@@ -24,6 +24,7 @@ public class StudentController {
     BatchService batchService;
 
 
+
     @PostMapping("/create")
     public ResponseEntity<?> createstudent(@RequestBody StudentDO studentDO)
     {
@@ -47,12 +48,15 @@ public class StudentController {
     }
 
 
+
     @GetMapping("/getstudent/{id}")
     public ResponseEntity< StudentDO> getstudentbyid(@PathVariable String id)
     {
         StudentDO studentDO=  studentservices.getstudentbyid(id);
         return new ResponseEntity<>(studentDO,HttpStatus.OK);
     }
+
+
 
      @PutMapping("/update")
      public  ResponseEntity<StudentDO> updatestudentbyid(@RequestBody StudentDO studentDO){

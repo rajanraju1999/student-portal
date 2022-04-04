@@ -2,6 +2,7 @@ package com.example.Studentdataportal.Controllers;
 
 import com.example.Studentdataportal.DataObjects.LogsDO;
 import com.example.Studentdataportal.DataObjects.StudentCourseDO;
+import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Services.StudentCourseServices;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.ResponseMessage;
@@ -153,6 +154,7 @@ public class StudentCourseController {
         return new ResponseEntity<>(logsDOList, HttpStatus.OK);
 
     }
+
 
 
 

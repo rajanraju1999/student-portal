@@ -20,4 +20,5 @@ public interface StudentRepository extends JpaRepository<StudentEntity,String> {
    List<StudentEntity> getByBatchid(BatchEntity batchid);
 
    List<StudentEntity> getAllByBatchid(BatchEntity byBatch);
+
 }

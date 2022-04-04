@@ -33,7 +33,7 @@ public class StudentCourseDO {
 
     // private CourseLogEntity logid;
 
-    //private long totalattempts;
+    private long totalattempts;
 
     private long semester;
     private String examdate;

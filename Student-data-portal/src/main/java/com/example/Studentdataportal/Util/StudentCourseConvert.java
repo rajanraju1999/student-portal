@@ -30,6 +30,6 @@ StudentRepository studentRepository;
         StudentEntity studentEntity= studentCourseEntity.getStudentid();
         CourseEntity courseEntity= studentCourseEntity.getCourseid();
         return StudentCourseDO.builder().studentid(studentEntity.getRollnumber()).grade(studentCourseEntity.getGrade()).courseid(courseEntity.getCourseid()).coursename(courseEntity.getCourseName())
-                .semester(studentCourseEntity.getSemester()).examdate(studentCourseEntity.getExamdate()).build();
+                .semester(studentCourseEntity.getSemester()).examdate(studentCourseEntity.getExamdate()).totalattempts(studentCourseEntity.getTotalattempts()).build();
     }
 }

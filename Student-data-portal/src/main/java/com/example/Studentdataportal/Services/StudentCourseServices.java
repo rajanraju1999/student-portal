@@ -1,7 +1,9 @@
 package com.example.Studentdataportal.Services;
 
 import com.example.Studentdataportal.DataObjects.LogsDO;
+import com.example.Studentdataportal.DataObjects.StudentBacklogDO;
 import com.example.Studentdataportal.DataObjects.StudentCourseDO;
+import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Entitis.*;
 import com.example.Studentdataportal.Repositorys.*;
 import com.example.Studentdataportal.Util.Helper;
@@ -29,6 +31,8 @@ public class StudentCourseServices {
         StudentCourseConvert studentCourseConvert;
         @Autowired
         StudentRepository studentRepository;
+        @Autowired
+        BatchRepository batchRepository;
         @Autowired
         CourseRepository courseRepository;
 
@@ -561,5 +565,119 @@ public class StudentCourseServices {
                 throw new NoDataSentException();
             }
         }
+    public  List<StudentCourseDO> getStudentsByBatchAndCourse(String batch, String courseName)
+    {
+        //fetch all the students of given batch
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+        //fetch course entity of given course
+        CourseEntity courseEntity= courseRepository.getByCourseNameAndCourseRegulation(courseName,batchRepository.getByBatch(batch).getRegulation());
+
+        //fetch students with the given course entries.
+        List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+        for(int i=0;i<studentEntities.size();i++)
+        {
+            if( studentCourseRepository.existsByStudentidAndCourseid(studentEntities.get(i),courseEntity) ){
+                studentCourseEntityList.add(studentCourseRepository.getByStudentidAndCourseid(studentEntities.get(i),courseEntity));
+            }
+        }
+        //'O','A+','A','B+','B','C','P','F','I'
+        List<StudentCourseDO> studentCourseOgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCourseAplusgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCourseAgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCourseBplusgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCourseBgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCourseCgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCoursePgradeDOList = new ArrayList<>();
+        List<StudentCourseDO> studentCourseFgradeDOList = new ArrayList<>();
+
+        for(int h = 0; h < studentCourseEntityList.size() ; h++){
+            if( studentCourseEntityList.get(h).getGrade().equals("O") ){
+                studentCourseOgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("A+")){
+                studentCourseAplusgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("A")){
+                studentCourseAgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("B+")){
+                studentCourseBplusgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("B")){
+                studentCourseBgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("C")){
+                studentCourseCgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("P")){
+                studentCoursePgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }else if(studentCourseEntityList.get(h).getGrade().equals("F")){
+                studentCourseFgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }
+        }
+        List<StudentCourseDO> studentCourseDOList = new ArrayList<>();
+        studentCourseDOList.addAll(studentCourseOgradeDOList);
+        studentCourseDOList.addAll(studentCourseAplusgradeDOList);
+        studentCourseDOList.addAll(studentCourseAgradeDOList);
+        studentCourseDOList.addAll(studentCourseBplusgradeDOList);
+        studentCourseDOList.addAll(studentCourseBgradeDOList);
+        studentCourseDOList.addAll(studentCourseCgradeDOList);
+        studentCourseDOList.addAll(studentCoursePgradeDOList);
+        studentCourseDOList.addAll(studentCourseFgradeDOList);
+        return studentCourseDOList;
+    }
+    public  List<StudentCourseDO> getFailedStudentsByBatchAndCourse(String batch, String courseName)
+    {
+        //fetch all the students of given batch
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+        //fetch course entity of given course
+        CourseEntity courseEntity= courseRepository.getByCourseNameAndCourseRegulation(courseName,batchRepository.getByBatch(batch).getRegulation());
+
+        //fetch students with the given course entries.
+        List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+        for(int i=0;i<studentEntities.size();i++)
+        {
+            if( studentCourseRepository.existsByStudentidAndCourseid(studentEntities.get(i),courseEntity) ){
+                studentCourseEntityList.add(studentCourseRepository.getByStudentidAndCourseid(studentEntities.get(i),courseEntity));
+            }
+        }
+        //'O','A+','A','B+','B','C','P','F','I'
+
+        List<StudentCourseDO> studentCourseFgradeDOList = new ArrayList<>();
+
+        for(int h = 0; h < studentCourseEntityList.size() ; h++){
+            if(studentCourseEntityList.get(h).getGrade().equals("F")){
+                studentCourseFgradeDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+            }
+        }
+
+        return studentCourseFgradeDOList;
+    }
+    public  List<StudentBacklogDO>  getstudentswithNmaxBacklogs(String batch,int N)
+    {
+        //fetch all the students of given batch
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+
+
+        //List<StudentCourseDO> studentCourseDOList = new ArrayList<>();
+
+        List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+
+
+        List<StudentBacklogDO> studentBacklogDOList =  new ArrayList<>();
+        for(int i=0;i<studentEntities.size();i++)
+        {
+            StudentBacklogDO studentBacklogDO = new StudentBacklogDO();
+            studentCourseEntityList = studentCourseRepository.getAllByStudentidAndGrade(studentEntities.get(i),"F");
+            if(studentCourseEntityList.size()<=N){
+                studentBacklogDO.setStudentid(studentEntities.get(i).getRollnumber());
+                List<StudentCourseDO> studentCourseDOList = new ArrayList<>();
+                for(int h = 0; h < studentCourseEntityList.size(); h++){
+                        studentCourseDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(h)));
+                }
+                studentBacklogDO.setStudentCourseDOList(studentCourseDOList);
+                studentBacklogDOList.add(studentBacklogDO);
+            }
+            studentCourseEntityList.clear();
+            //if( studentCourseRepository.existsByStudentidAndCourseid(studentEntities.get(i),courseEntity) ){
+            //    studentCourseEntityList.add(studentCourseRepository.getByStudentidAndCourseid(studentEntities.get(i),courseEntity));
+            //}
+        }
+        return studentBacklogDOList;
+    }
 
 }
