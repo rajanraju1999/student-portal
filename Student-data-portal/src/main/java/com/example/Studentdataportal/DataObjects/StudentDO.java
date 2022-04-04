@@ -16,14 +16,11 @@ import javax.persistence.Entity;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL )
 public class StudentDO {
-
-
     private String rollnumber;
     private String name;
     private String emailid;
     private String section;
     private String batchid;
     private String yearofjoining;
-
-
+    private Float Cgpa;
 }

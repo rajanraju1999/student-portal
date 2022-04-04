@@ -7,6 +7,7 @@ import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Entitis.*;
 import com.example.Studentdataportal.Repositorys.*;
 import com.example.Studentdataportal.Util.Helper;
+import com.example.Studentdataportal.Util.StudentConvert;
 import com.example.Studentdataportal.Util.StudentCourseConvert;
 import com.example.Studentdataportal.Util.LogsConvert;
 import com.example.Studentdataportal.exception.EmptyFieldException;
@@ -30,19 +31,20 @@ public class StudentCourseServices {
         @Autowired
         StudentCourseConvert studentCourseConvert;
         @Autowired
+        StudentConvert studentConvert;
+        @Autowired
         StudentRepository studentRepository;
         @Autowired
         BatchRepository batchRepository;
         @Autowired
         CourseRepository courseRepository;
-
+        @Autowired
+        CgpaAndSgpaRepository cgpaAndSgpaRepository;
         @Autowired
          StudentCourseLogRepository studentCourseLogRepository;
         @Autowired
         LogsConvert logsConvert;
 
-        @Autowired
-    CgpaAndSgpaRepository cgpaAndSgpaRepository;
 
 
         public void save(MultipartFile file, Long sem, String type,String date,String regulation) {
@@ -680,4 +682,22 @@ public class StudentCourseServices {
         return studentBacklogDOList;
     }
 
+    public  List<StudentDO>  getstudentsListShortlistByCGPA(String batch,Float cgpa)
+    {
+        //fetch all the students of given batch
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+
+        List<StudentDO> studentDOList =  new ArrayList<>();
+
+        for(int h=0; h<studentEntities.size() ; h++){
+            StudentDO studentDO = new StudentDO();
+            //System.out.println(cgpa);
+            if(!cgpaAndSgpaRepository.getBystudentid( studentEntities.get(h) ).getCgpa().equals("") && Float.parseFloat( cgpaAndSgpaRepository.getBystudentid( studentEntities.get(h) ).getCgpa() ) >= cgpa ) {
+                studentDO = studentConvert.convert2StudentDO(studentEntities.get(h));
+                studentDO.setCgpa(Float.parseFloat(cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h)).getCgpa()));
+                studentDOList.add(studentDO);
+            }
+        }
+        return studentDOList;
+    }
 }

@@ -40,5 +40,12 @@ public class FiltersController {
         List<StudentBacklogDO> studentBacklogDOList=  studentCourseServices.getstudentswithNmaxBacklogs(batch,N);
         return new ResponseEntity<>(studentBacklogDOList, HttpStatus.OK);
     }
+    @GetMapping("/getstudentsListShortlistByCGPA/{id}/{id1}")
+    public ResponseEntity<List<StudentDO>> getstudentsListShortlistByCGPA(@PathVariable("id") String batch,@PathVariable("id1") Float cgpa)
+    {
+        List<StudentDO> studentDO =  studentCourseServices.getstudentsListShortlistByCGPA(batch,cgpa);
+        return new ResponseEntity<>(studentDO, HttpStatus.OK);
+    }
+
 
 }
