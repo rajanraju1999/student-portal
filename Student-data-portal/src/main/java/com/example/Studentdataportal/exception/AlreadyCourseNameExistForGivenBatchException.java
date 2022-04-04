@@ -8,5 +8,7 @@ public class AlreadyCourseNameExistForGivenBatchException extends RuntimeExcepti
     String string2;
 
     public AlreadyCourseNameExistForGivenBatchException(String batch, String courseName) {
+        string1=batch;
+        string2=courseName;
     }
 }
