@@ -22,5 +22,4 @@ public class StudentDO {
     private String section;
     private String batchid;
     private String yearofjoining;
-    private Float Cgpa;
 }

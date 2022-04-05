@@ -19,22 +19,22 @@ public class CgpaAndSgpaDO {
     private StudentEntity studentid;
 
 
-    private double sgpa1;
+    private String sgpa1;
 
-    private double sgpa2;
+    private String sgpa2;
 
-    private double sgpa3;
+    private String sgpa3;
 
-    private double sgpa4;
+    private String sgpa4;
 
-    private double sgpa5;
+    private String sgpa5;
 
-    private double sgpa6;
+    private String sgpa6;
 
-    private double sgpa7;
+    private String sgpa7;
 
-    private double sgpa8;
+    private String sgpa8;
 
-    private double cgpa;
+    private String cgpa;
 
 }

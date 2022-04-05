@@ -1,5 +1,6 @@
 package com.example.Studentdataportal.Controllers;
 
+import com.example.Studentdataportal.DataObjects.CgpaAndSgpaDO;
 import com.example.Studentdataportal.DataObjects.StudentBacklogDO;
 import com.example.Studentdataportal.DataObjects.StudentCourseDO;
 import com.example.Studentdataportal.DataObjects.StudentDO;
@@ -41,11 +42,21 @@ public class FiltersController {
         return new ResponseEntity<>(studentBacklogDOList, HttpStatus.OK);
     }
     @GetMapping("/getstudentsListShortlistByCGPA/{id}/{id1}")
-    public ResponseEntity<List<StudentDO>> getstudentsListShortlistByCGPA(@PathVariable("id") String batch,@PathVariable("id1") Float cgpa)
+    public ResponseEntity<List<CgpaAndSgpaDO>> getstudentsListShortlistByCGPA(@PathVariable("id") String batch,@PathVariable("id1") Float cgpa)
     {
-        List<StudentDO> studentDO =  studentCourseServices.getstudentsListShortlistByCGPA(batch,cgpa);
-        return new ResponseEntity<>(studentDO, HttpStatus.OK);
+        List<CgpaAndSgpaDO> cgpaAndSgpaDOList =  studentCourseServices.getstudentsListShortlistByCGPA(batch,cgpa);
+        return new ResponseEntity<>(cgpaAndSgpaDOList, HttpStatus.OK);
     }
-
-
+    @GetMapping("/getstudentsListSortByCGPA/{id}")
+    public ResponseEntity<List<CgpaAndSgpaDO>> getstudentsListSortByCGPA(@PathVariable("id") String batch)
+    {
+        List<CgpaAndSgpaDO> cgpaAndSgpaDOList =  studentCourseServices.getstudentsListSortByCGPA(batch);
+        return new ResponseEntity<>(cgpaAndSgpaDOList, HttpStatus.OK);
+    }
+    @GetMapping("/getstudentsListSortBySGPA/{id}/{id1}")
+    public ResponseEntity<List<CgpaAndSgpaDO>> getstudentsListSortBySGPA(@PathVariable("id") String batch,@PathVariable("id1") String sem)
+    {
+        List<CgpaAndSgpaDO> cgpaAndSgpaDOList =  studentCourseServices.getstudentsListSortBySGPA(batch,sem);
+        return new ResponseEntity<>(cgpaAndSgpaDOList, HttpStatus.OK);
+    }
 }

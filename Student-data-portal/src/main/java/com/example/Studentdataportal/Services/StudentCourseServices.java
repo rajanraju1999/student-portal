@@ -1,15 +1,9 @@
 package com.example.Studentdataportal.Services;
 
-import com.example.Studentdataportal.DataObjects.LogsDO;
-import com.example.Studentdataportal.DataObjects.StudentBacklogDO;
-import com.example.Studentdataportal.DataObjects.StudentCourseDO;
-import com.example.Studentdataportal.DataObjects.StudentDO;
+import com.example.Studentdataportal.DataObjects.*;
 import com.example.Studentdataportal.Entitis.*;
 import com.example.Studentdataportal.Repositorys.*;
-import com.example.Studentdataportal.Util.Helper;
-import com.example.Studentdataportal.Util.StudentConvert;
-import com.example.Studentdataportal.Util.StudentCourseConvert;
-import com.example.Studentdataportal.Util.LogsConvert;
+import com.example.Studentdataportal.Util.*;
 import com.example.Studentdataportal.exception.EmptyFieldException;
 import com.example.Studentdataportal.exception.MultipleAttemptsPresentException;
 import com.example.Studentdataportal.exception.NoDataSentException;
@@ -21,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -682,22 +677,65 @@ public class StudentCourseServices {
         return studentBacklogDOList;
     }
 
-    public  List<StudentDO>  getstudentsListShortlistByCGPA(String batch,Float cgpa)
+    public  List<CgpaAndSgpaDO>  getstudentsListShortlistByCGPA(String batch,Float cgpa)
     {
         //fetch all the students of given batch
         List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
 
-        List<StudentDO> studentDOList =  new ArrayList<>();
+        List<CgpaAndSgpaDO> cgpaAndSgpaDOList =  new ArrayList<>();
 
         for(int h=0; h<studentEntities.size() ; h++){
-            StudentDO studentDO = new StudentDO();
+            CgpaAndSgpaDO cgpaAndSgpaDO = new CgpaAndSgpaDO();
             //System.out.println(cgpa);
             if(!cgpaAndSgpaRepository.getBystudentid( studentEntities.get(h) ).getCgpa().equals("") && Float.parseFloat( cgpaAndSgpaRepository.getBystudentid( studentEntities.get(h) ).getCgpa() ) >= cgpa ) {
-                studentDO = studentConvert.convert2StudentDO(studentEntities.get(h));
-                studentDO.setCgpa(Float.parseFloat(cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h)).getCgpa()));
-                studentDOList.add(studentDO);
+                CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h));
+                cgpaAndSgpaDO = CgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
+                cgpaAndSgpaDOList.add(cgpaAndSgpaDO);
             }
         }
-        return studentDOList;
+        sort(cgpaAndSgpaDOList);
+        return cgpaAndSgpaDOList;
+    }
+
+    public  List<CgpaAndSgpaDO>  getstudentsListSortByCGPA(String batch)
+    {
+        //fetch all the students of given batch
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+
+        //List<StudentDO> studentDOList =  new ArrayList<>();
+        List<CgpaAndSgpaDO> cgpaAndSgpaDOList =  new ArrayList<>();
+
+
+        for(int h=0; h<studentEntities.size() ; h++){
+            CgpaAndSgpaDO cgpaAndSgpaDO = new CgpaAndSgpaDO();
+            //System.out.println(cgpa);
+            CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h));
+            cgpaAndSgpaDO = CgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
+            cgpaAndSgpaDOList.add(cgpaAndSgpaDO);
+        }
+        sort(cgpaAndSgpaDOList);
+        return cgpaAndSgpaDOList;
+    }
+    public static void sort(List<CgpaAndSgpaDO> list)
+    {
+        list.sort(Comparator.comparing(CgpaAndSgpaDO::getCgpa,Comparator.reverseOrder()));
+    }
+
+    public  List<CgpaAndSgpaDO>  getstudentsListSortBySGPA(String batch,String sem)
+    {
+        //fetch all the students of given batch
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+
+        List<CgpaAndSgpaDO> cgpaAndSgpaDOList =  new ArrayList<>();
+
+        for(int h=0; h<studentEntities.size() ; h++){
+            CgpaAndSgpaDO cgpaAndSgpaDO = new CgpaAndSgpaDO();
+            //System.out.println(cgpa);
+            CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h));
+            cgpaAndSgpaDO = CgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
+            cgpaAndSgpaDOList.add(cgpaAndSgpaDO);
+        }
+
+        return cgpaAndSgpaDOList;
     }
 }
