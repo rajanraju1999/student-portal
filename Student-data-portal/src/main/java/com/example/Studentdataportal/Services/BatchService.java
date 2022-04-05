@@ -34,6 +34,8 @@ public class BatchService {
     StudentRepository studentRepository;
     @Autowired
     CgpaAndSgpaConvert cgpaAndSgpaConvert;
+    @Autowired
+    StudentCourseServices studentCourseServices;
     public List<BatchDO> getallbatches()
     {
         List<BatchEntity> batchList = batchRepository.findAll();
@@ -59,9 +61,9 @@ public class BatchService {
 
            CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntityList.get(i));
 
-           if((cgpaAndSgpaEntity.getSgpa1() == null || cgpaAndSgpaEntity.getSgpa1().isEmpty()) && (cgpaAndSgpaEntity.getSgpa2()==null||cgpaAndSgpaEntity.getSgpa2().isEmpty()) && (cgpaAndSgpaEntity.getSgpa3()==null||cgpaAndSgpaEntity.getSgpa3().isEmpty()) && (cgpaAndSgpaEntity.getSgpa4()==null||cgpaAndSgpaEntity.getSgpa4().isEmpty()) && (cgpaAndSgpaEntity.getSgpa5()==null||cgpaAndSgpaEntity.getSgpa5().isEmpty()) && (cgpaAndSgpaEntity.getSgpa6()==null||cgpaAndSgpaEntity.getSgpa6().isEmpty()) && (cgpaAndSgpaEntity.getSgpa7()==null||cgpaAndSgpaEntity.getSgpa7().isEmpty()) && (cgpaAndSgpaEntity.getSgpa8()==null||cgpaAndSgpaEntity.getSgpa8().isEmpty()) && (cgpaAndSgpaEntity.getCgpa()==null||cgpaAndSgpaEntity.getCgpa().isEmpty())){
+           if((cgpaAndSgpaEntity.getSgpa1() == null || cgpaAndSgpaEntity.getSgpa1().isEmpty()) || (cgpaAndSgpaEntity.getSgpa2()==null||cgpaAndSgpaEntity.getSgpa2().isEmpty()) || (cgpaAndSgpaEntity.getSgpa3()==null||cgpaAndSgpaEntity.getSgpa3().isEmpty()) || (cgpaAndSgpaEntity.getSgpa4()==null||cgpaAndSgpaEntity.getSgpa4().isEmpty()) || (cgpaAndSgpaEntity.getSgpa5()==null||cgpaAndSgpaEntity.getSgpa5().isEmpty()) || (cgpaAndSgpaEntity.getSgpa6()==null||cgpaAndSgpaEntity.getSgpa6().isEmpty()) || (cgpaAndSgpaEntity.getSgpa7()==null||cgpaAndSgpaEntity.getSgpa7().isEmpty()) || (cgpaAndSgpaEntity.getSgpa8()==null||cgpaAndSgpaEntity.getSgpa8().isEmpty()) || (cgpaAndSgpaEntity.getCgpa()==null||cgpaAndSgpaEntity.getCgpa().isEmpty())){
 
-               throw new BatchReportException(batchid);
+
 
            }
            else {
@@ -69,24 +71,23 @@ public class BatchService {
                cgpaAndSgpaEntityList.add(cgpaAndSgpaEntity);
            }
        }
-        CgpaAndSgpaEntity cgpaAndSgpaEntity1 =cgpaAndSgpaEntityList.get(1);
+       if(cgpaAndSgpaEntityList.isEmpty()){
+           throw new BatchReportException(batchid);
+       }
+
        for(int i=0;i<cgpaAndSgpaEntityList.size();i++)
        {
 
            cgpaAndSgpaDOList.add(cgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntityList.get(i)));
-           if(Integer.parseInt(cgpaAndSgpaEntity1.getCgpa())<Integer.parseInt(cgpaAndSgpaEntityList.get(i).getCgpa()))
-           {
-               cgpaAndSgpaEntity1.setCgpa(cgpaAndSgpaEntityList.get(i).getCgpa());
-           }
        }
-        CgpaAndSgpaDO cgpaAndSgpaDO= cgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity1);
+
 
         BatchReportDO batchReportDO = new  BatchReportDO();
 
 
         batchReportDO.setGraduationlist(cgpaAndSgpaDOList);
-        batchReportDO.setBatchpasspercentage((double) cgpaAndSgpaEntityList.size()/studentEntityList.size());
-        batchReportDO.setBatchtoper(cgpaAndSgpaDO);
+        batchReportDO.setBatchpasspercentage((double) cgpaAndSgpaEntityList.size()/studentEntityList.size()*100);
+        batchReportDO.setBatchtoper(studentCourseServices.getstudentsListSortByCGPA(batchid).get(0));
 
         return batchReportDO;
     }
