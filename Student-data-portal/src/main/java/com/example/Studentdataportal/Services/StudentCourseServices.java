@@ -39,8 +39,8 @@ public class StudentCourseServices {
          StudentCourseLogRepository studentCourseLogRepository;
         @Autowired
         LogsConvert logsConvert;
-
-
+        @Autowired
+        CgpaAndSgpaConvert cgpaAndSgpaConver;
 
         public void save(MultipartFile file, Long sem, String type,String date,String regulation) {
 
@@ -689,7 +689,7 @@ public class StudentCourseServices {
             //System.out.println(cgpa);
             if(!cgpaAndSgpaRepository.getBystudentid( studentEntities.get(h) ).getCgpa().equals("") && Float.parseFloat( cgpaAndSgpaRepository.getBystudentid( studentEntities.get(h) ).getCgpa() ) >= cgpa ) {
                 CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h));
-                cgpaAndSgpaDO = CgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
+                cgpaAndSgpaDO =  cgpaAndSgpaConver.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
                 cgpaAndSgpaDOList.add(cgpaAndSgpaDO);
             }
         }
@@ -710,7 +710,7 @@ public class StudentCourseServices {
             CgpaAndSgpaDO cgpaAndSgpaDO = new CgpaAndSgpaDO();
             //System.out.println(cgpa);
             CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h));
-            cgpaAndSgpaDO = CgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
+            cgpaAndSgpaDO =  cgpaAndSgpaConver.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
             cgpaAndSgpaDOList.add(cgpaAndSgpaDO);
         }
         sort(cgpaAndSgpaDOList);
@@ -732,7 +732,7 @@ public class StudentCourseServices {
             CgpaAndSgpaDO cgpaAndSgpaDO = new CgpaAndSgpaDO();
             //System.out.println(cgpa);
             CgpaAndSgpaEntity cgpaAndSgpaEntity = cgpaAndSgpaRepository.getBystudentid(studentEntities.get(h));
-            cgpaAndSgpaDO = CgpaAndSgpaConvert.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
+            cgpaAndSgpaDO =  cgpaAndSgpaConver.convert2CgpaAndSgpaDO(cgpaAndSgpaEntity);
             cgpaAndSgpaDOList.add(cgpaAndSgpaDO);
         }
 

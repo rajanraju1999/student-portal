@@ -114,5 +114,9 @@ public class MyControllerAdvice {
     public ResponseEntity<String> wrongNameException(wrongNameException exc) {
         return new ResponseEntity<>(exc.getColumn_name()+" is the wrong  name in the COs column  , you shoulg use "+exc.getCorrect_column_name() , HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(BatchReportException.class)
+    public ResponseEntity<String> wrongNameException(BatchReportException exc) {
+        return new ResponseEntity<>(exc.getString()+" batch is not a complited one " , HttpStatus.BAD_REQUEST);
+    }
 }
 
