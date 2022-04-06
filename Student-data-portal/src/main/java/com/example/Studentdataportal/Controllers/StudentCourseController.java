@@ -89,7 +89,7 @@ public class StudentCourseController {
     }
 
 
-    @GetMapping("/getAllbybatchid/{id}")
+    @GetMapping("/getAll/{id}")
         public ResponseEntity<List<StudentCourseDO>> getAllbybatchid(@PathVariable String id) {
 
                 List<StudentCourseDO> studentCourseDOList = studentCourseServices. getAllbybatchid(id);
@@ -100,17 +100,17 @@ public class StudentCourseController {
 
             }
 
-    @GetMapping("/getAllbybatchidandsectionandsemester/{id}/{id1}/{id2}")
-    public ResponseEntity<List<StudentCourseDO>> getAllbybatchidAndSection(@PathVariable String id,@PathVariable String id1,@PathVariable Long id2) {
+    @GetMapping("/getAll/{id}/{id1}/{id2}")
+    public ResponseEntity<List<StudentCourseDO>> getAllbybatchidAndSection(@PathVariable String id,@PathVariable Long id1,@PathVariable String id2) {
 
-        List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsectionandsemester(id,id1,id2);
+        List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsectionandsemester(id,id2,id1);
         if (studentCourseDOList.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(studentCourseDOList, HttpStatus.OK);
 
     }
-    @GetMapping("/getAllbybatchidandsemester/{id}/{id1}")
+    @GetMapping("/getAll/{id}/{id1}")
     public ResponseEntity<List<StudentCourseDO>> getAllbybatchidandsemester(@PathVariable String id,@PathVariable Long id1) {
 
         List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsemester(id,id1);
@@ -121,7 +121,7 @@ public class StudentCourseController {
 
     }
 
-    @GetMapping("/getAll/{id}")
+    @GetMapping("/getAllById/{id}")
     public ResponseEntity<List<StudentCourseDO>> getAll(@PathVariable String id) {
 
         List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbyid(id);
