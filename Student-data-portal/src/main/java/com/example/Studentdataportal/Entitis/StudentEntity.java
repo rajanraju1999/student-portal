@@ -15,8 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 public class StudentEntity {
-
-
+    
     @Id
     @Column(name = "rollnumber",nullable = false)
     private String rollnumber;
