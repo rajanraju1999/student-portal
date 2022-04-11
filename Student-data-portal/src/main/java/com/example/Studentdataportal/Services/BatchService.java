@@ -4,16 +4,14 @@ package com.example.Studentdataportal.Services;
 import com.example.Studentdataportal.DataObjects.BatchDO;
 import com.example.Studentdataportal.DataObjects.BatchReportDO;
 import com.example.Studentdataportal.DataObjects.CgpaAndSgpaDO;
-import com.example.Studentdataportal.DataObjects.CourseDO;
 import com.example.Studentdataportal.Entitis.BatchEntity;
 import com.example.Studentdataportal.Entitis.CgpaAndSgpaEntity;
-import com.example.Studentdataportal.Entitis.CourseEntity;
 import com.example.Studentdataportal.Entitis.StudentEntity;
 import com.example.Studentdataportal.Repositorys.BatchRepository;
 import com.example.Studentdataportal.Repositorys.CgpaAndSgpaRepository;
 import com.example.Studentdataportal.Repositorys.StudentRepository;
 import com.example.Studentdataportal.Util.CgpaAndSgpaConvert;
-import com.example.Studentdataportal.Util.batchConvert;
+import com.example.Studentdataportal.Util.BatchConvert;
 import com.example.Studentdataportal.exception.BatchReportException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,7 @@ public class BatchService {
     @Autowired
     BatchRepository batchRepository;
     @Autowired
-    batchConvert batchConvert;
+    BatchConvert batchConvert;
 
     @Autowired
     CgpaAndSgpaRepository cgpaAndSgpaRepository;

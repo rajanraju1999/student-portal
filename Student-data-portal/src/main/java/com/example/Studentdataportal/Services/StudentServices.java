@@ -8,6 +8,7 @@ import com.example.Studentdataportal.Repositorys.BatchRepository;
 import com.example.Studentdataportal.Repositorys.StudentCourseLogRepository;
 import com.example.Studentdataportal.Repositorys.StudentCourseRepository;
 import com.example.Studentdataportal.Repositorys.StudentRepository;
+import com.example.Studentdataportal.Util.BatchConvert;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.StudentConvert;
 import com.example.Studentdataportal.exception.*;
@@ -34,6 +35,8 @@ public class StudentServices {
     StudentCourseRepository studentCourseRepository;
     @Autowired
     BatchRepository batchRepository;
+    @Autowired
+    BatchConvert batchConvert;
     public void createstudent(StudentDO studentDO)
     {
 
@@ -264,7 +267,7 @@ public class StudentServices {
     public void createbatch(BatchDO batchDO){
 
 
-        BatchEntity batchEntity= studentConvert.convert2BatchEntity(batchDO);
+        BatchEntity batchEntity= batchConvert.convert2BatchEntity(batchDO);
         System.out.println(batchEntity);
         batchRepository.save(batchEntity);
 

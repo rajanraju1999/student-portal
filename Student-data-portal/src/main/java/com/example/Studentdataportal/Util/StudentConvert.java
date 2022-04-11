@@ -27,10 +27,6 @@ public class StudentConvert {
 
     }
 
-    public BatchEntity convert2BatchEntity(BatchDO batchDO) {
 
-        return BatchEntity.builder().batch(batchDO.getBatch_id()).build();
-
-    }
 
 }
