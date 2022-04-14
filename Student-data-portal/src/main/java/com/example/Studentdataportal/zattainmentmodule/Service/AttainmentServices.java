@@ -87,6 +87,14 @@ public class AttainmentServices {
         }
         return attainmentDOList;
     }
+    public List<AttainmentDO> getAttinmentsOfBatch(String batch,String courseid){
+        List<AttainmentEntity> attainmentEntityList = attainmentRepository.getAllByBatchidAndCourseid(batchRepository.getByBatch(batch),courseRepository.getByCourseid(courseid));
+        List<AttainmentDO> attainmentDOList = new ArrayList<>();;
+        for(int h = 0 ; h < attainmentEntityList.size() ; h++){
+            attainmentDOList.add(attainmentConvert.convert2AttainmentDO(attainmentEntityList.get(h)));
+        }
+        return attainmentDOList;
+    }
 
     public List<CourseDO> getuploadedcourses(String batch){
 
@@ -116,7 +124,7 @@ public class AttainmentServices {
         List<AttainmentReportDO> attainmentReportDOList =new ArrayList<>();
 
         for (CourseEntity courseEntity : courseset){
-            attainmentEntityList = attainmentRepository.getByBatchidAndCourseid(batchRepository.getByBatch(batch),courseEntity);
+            attainmentEntityList = attainmentRepository.getAllByBatchidAndCourseid(batchRepository.getByBatch(batch),courseEntity);
 
             AttainmentReportDO attainmentReportDO = new AttainmentReportDO();
 

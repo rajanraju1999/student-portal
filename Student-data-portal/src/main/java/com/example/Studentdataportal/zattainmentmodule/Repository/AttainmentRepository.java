@@ -14,5 +14,6 @@ public interface AttainmentRepository extends JpaRepository<AttainmentEntity,Lon
     boolean existsByBatchidAndCourseid(BatchEntity batchEntity, CourseEntity courseEntity);
     void deleteAllByBatchidAndCourseid(BatchEntity batchEntity, CourseEntity courseEntity);
     List<AttainmentEntity> getAllByBatchid(BatchEntity batchEntity);
-    List<AttainmentEntity> getByBatchidAndCourseid(BatchEntity batchEntity, CourseEntity courseEntity);
+    List<AttainmentEntity> getAllByBatchidAndCourseid(BatchEntity batchEntity, CourseEntity courseEntity);
+
 }

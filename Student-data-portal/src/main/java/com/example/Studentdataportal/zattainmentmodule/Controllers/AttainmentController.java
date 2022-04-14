@@ -31,7 +31,13 @@ public class AttainmentController {
         AttainmentDoList = attainmentServices.getAllAttinmentsOfBatch(batch);
         return new ResponseEntity<>(AttainmentDoList, HttpStatus.OK);
     }
-    
+    @GetMapping("/getattainments/{id}/{id1}")
+    public ResponseEntity<List<AttainmentDO>> getattinments(@PathVariable("id") String batch,@PathVariable("id1") String courseid)
+    {
+        List<AttainmentDO> AttainmentDoList;
+        AttainmentDoList = attainmentServices.getAttinmentsOfBatch(batch,courseid);
+        return new ResponseEntity<>(AttainmentDoList, HttpStatus.OK);
+    }
 
     @GetMapping("/attainmentsreport/{id}")
     public ResponseEntity<List<AttainmentReportDO>> getattinmentreport(@PathVariable("id") String batch)
