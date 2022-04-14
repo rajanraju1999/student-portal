@@ -31,6 +31,7 @@ public class AttainmentController {
         AttainmentDoList = attainmentServices.getAllAttinmentsOfBatch(batch);
         return new ResponseEntity<>(AttainmentDoList, HttpStatus.OK);
     }
+    
 
     @GetMapping("/attainmentsreport/{id}")
     public ResponseEntity<List<AttainmentReportDO>> getattinmentreport(@PathVariable("id") String batch)
@@ -40,6 +41,13 @@ public class AttainmentController {
         return new ResponseEntity<>(AttainmentReportDOList, HttpStatus.OK);
     }
 
+    @GetMapping("/getUploadedCourses/{id}")
+    public ResponseEntity<List<CourseDO>> getcourses(@PathVariable("id") String batch)
+    {
+        List<CourseDO> courseDOListDO;
+        courseDOListDO = attainmentServices.getuploadedcourses(batch);
+        return new ResponseEntity<>(courseDOListDO, HttpStatus.OK);
+    }
 
     @PostMapping("/upload/{id}/{id1}/{id2}")
     public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("file") MultipartFile file,@PathVariable("id") String batch,@PathVariable("id1") String courseName,@PathVariable("id2") String regulation) {

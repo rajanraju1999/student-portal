@@ -1,9 +1,11 @@
 package com.example.Studentdataportal.zattainmentmodule.Service;
 
+import com.example.Studentdataportal.DataObjects.CourseDO;
 import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Entitis.*;
 import com.example.Studentdataportal.Repositorys.BatchRepository;
 import com.example.Studentdataportal.Repositorys.CourseRepository;
+import com.example.Studentdataportal.Util.CourseConvert;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.exception.AlreadyCourseNameExistForGivenBatchException;
 import com.example.Studentdataportal.exception.BatchDoesNotExistException;
@@ -31,6 +33,8 @@ public class AttainmentServices {
     CourseRepository courseRepository;
     @Autowired
     AttainmentConvert attainmentConvert;
+    @Autowired
+    CourseConvert courseConvert;
     @Autowired
     AttainmentRepository attainmentRepository;
 
@@ -78,10 +82,27 @@ public class AttainmentServices {
     public List<AttainmentDO> getAllAttinmentsOfBatch(String batch){
         List<AttainmentEntity> attainmentEntityList = attainmentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
         List<AttainmentDO> attainmentDOList = new ArrayList<>();;
-        for(int h = 1 ; h < attainmentEntityList.size() ; h++){
+        for(int h = 0 ; h < attainmentEntityList.size() ; h++){
             attainmentDOList.add(attainmentConvert.convert2AttainmentDO(attainmentEntityList.get(h)));
         }
         return attainmentDOList;
+    }
+
+    public List<CourseDO> getuploadedcourses(String batch){
+
+        List<AttainmentEntity> attainmentEntityList = attainmentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+        Set<CourseDO> courseDOs = new HashSet<CourseDO>();
+
+        for(int h=0; h < attainmentEntityList.size(); h++ ){
+            courseDOs.add(courseConvert.convert2CourseDO(attainmentEntityList.get(h).getCourseid()));
+        }
+
+        List<CourseDO> courseDOList = new ArrayList<>();;
+
+        for (CourseDO i : courseDOs) {
+            courseDOList.add(i);
+        }
+        return courseDOList;
     }
 
 

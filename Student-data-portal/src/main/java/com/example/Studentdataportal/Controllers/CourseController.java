@@ -41,6 +41,14 @@ public class CourseController {
         return new ResponseEntity<>(courseDOsList ,HttpStatus.OK);
     }
 
+    @GetMapping("/getallcoursesbyregulation/{reg}")
+    public ResponseEntity<List<CourseDO>> getallcoursesbyregulation(@PathVariable String reg)
+    {
+        List<CourseDO> courseDOsList;
+        courseDOsList = courseServices.getallcoursesbyreg(reg);
+        return new ResponseEntity<>(courseDOsList ,HttpStatus.OK);
+    }
+
 
     @GetMapping("/getcourse/{id}")
     public ResponseEntity<CourseDO> getcoursesbyid(@PathVariable String id)

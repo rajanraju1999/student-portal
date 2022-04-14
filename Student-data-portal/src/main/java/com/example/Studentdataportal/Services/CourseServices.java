@@ -75,6 +75,7 @@ public class CourseServices {
         return courseDO;
     }
 
+
     public void updatecoursebyid(CourseDO courseDO){
 
         //handle empty field
@@ -107,5 +108,20 @@ public class CourseServices {
             courseEntity.setCourseRegulation(courseDO.getCourseRegulation());
         }
        courseRepository.save(courseEntity);
+    }
+    public List<CourseDO> getallcoursesbyreg(String reg)
+    {
+
+        if(!courseRepository.existsByCourseRegulation(reg))
+        {
+            throw new NoSuchElementException();
+        }
+
+        List<CourseEntity> courseEntityList = courseRepository.getAllByCourseRegulation(reg);
+        List<CourseDO> courseDOList=new ArrayList<>();
+        for(int h=0; h<courseEntityList.size() ; h++) {
+            courseDOList.add(courseConvert.convert2CourseDO(courseEntityList.get(h)));
+        }
+        return courseDOList;
     }
 }

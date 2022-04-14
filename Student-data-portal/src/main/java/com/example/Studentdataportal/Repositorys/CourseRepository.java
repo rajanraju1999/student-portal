@@ -15,7 +15,8 @@ public interface CourseRepository extends JpaRepository<CourseEntity,String> {
     public boolean existsByCourseName(String courseName);
     CourseEntity getByCourseName(String courseName);
 
-
+    List<CourseEntity> getAllByCourseRegulation(String regulation);
+    public boolean existsByCourseRegulation(String regulation);
     public boolean existsByCourseid(String courseid);
     public boolean existsByCourseNameAndCourseRegulation(String courseName,String courseregulation);
     
