@@ -1,6 +1,7 @@
 package com.example.Studentdataportal.Controllers;
 
 import com.example.Studentdataportal.DataObjects.CourseDO;
+import com.example.Studentdataportal.DataObjects.RegulationDO;
 import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Services.CourseServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,13 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("/getallregulations")
+    public ResponseEntity<List<RegulationDO>> getallregulations()
+    {
+        List<RegulationDO> regulationDOList;
+        regulationDOList = courseServices.getallregulations();
+        return new ResponseEntity<>(regulationDOList ,HttpStatus.OK);
+    }
 
     @GetMapping("/getallcourses")
     public ResponseEntity<List<CourseDO>> getallcourses()

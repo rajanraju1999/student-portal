@@ -1,6 +1,7 @@
 package com.example.Studentdataportal.Services;
 
 import com.example.Studentdataportal.DataObjects.CourseDO;
+import com.example.Studentdataportal.DataObjects.RegulationDO;
 import com.example.Studentdataportal.Entitis.CourseEntity;
 import com.example.Studentdataportal.Repositorys.CourseRepository;
 import com.example.Studentdataportal.Util.CourseConvert;
@@ -8,10 +9,7 @@ import com.example.Studentdataportal.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CourseServices {
@@ -60,7 +58,20 @@ public class CourseServices {
         }
         return courseDOsList;
     }
-
+    public List<RegulationDO> getallregulations()
+    {
+        List<CourseEntity> coursesList = courseRepository.findAll();
+        List<RegulationDO> regulationDOList =new ArrayList<>();
+        Set<RegulationDO> regulationDOset = new HashSet<RegulationDO>();
+        for(int i=0;i<coursesList.size();i++)
+        {
+            regulationDOset.add(courseConvert.convert2RegulationDO(coursesList.get(i)));
+        }
+        for(RegulationDO i: regulationDOset){
+            regulationDOList.add(i);
+        }
+        return regulationDOList;
+    }
     public CourseDO getcoursesbyid(String id)
     {
 
@@ -124,4 +135,5 @@ public class CourseServices {
         }
         return courseDOList;
     }
+
 }
