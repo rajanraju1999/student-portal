@@ -14,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 public class StudentCourseServices {
@@ -41,6 +38,7 @@ public class StudentCourseServices {
         LogsConvert logsConvert;
         @Autowired
         CgpaAndSgpaConvert cgpaAndSgpaConver;
+
 
         public void save(MultipartFile file, Long sem, String type,String date,String regulation) {
 
@@ -157,6 +155,149 @@ public class StudentCourseServices {
                 throw new RuntimeException("fail to store excel data: " + e.getMessage());
             }
         }
+
+    public void save(MultipartFile file, String batch,Long sem,String date,String regulation) {
+
+        try {
+
+            List<StudentCourseDO> studentCourseDoList = Helper.excelToDb(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,batchRepository,batch,sem,date,regulation);
+
+
+
+            List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+            for(int i=0;i<studentCourseDoList.size();i++) {
+                studentCourseEntityList.add(studentCourseConvert.convert2StudentCourseEntity(studentCourseDoList.get(i)));
+            }
+
+            for(int i=0;i<studentCourseEntityList.size();i++){
+                if(studentCourseEntityList.get(i).getGrade().equals("F"))
+                {
+                    StudentEntity studentid= studentRepository.getByRollnumber(studentCourseEntityList.get(i).getStudentid().getRollnumber());
+                    CourseEntity courseid=courseRepository.getByCourseNameAndCourseRegulation(studentCourseEntityList.get(i).getCourseid().getCourseName(),regulation);
+
+                    StudentCourseLogEntity studentCourseLogEntity=  StudentCourseLogEntity.builder().courseid(courseid).studentid(studentid).attemptdate(date).attemptnumber((long)1).grade("F").build();
+
+                    studentCourseLogRepository.save(studentCourseLogEntity);
+
+                }
+
+            }
+            for(int i=0;i<studentCourseEntityList.size();i++)
+            {
+                studentCourseEntityList.get(i).setTotalattempts(1);
+            }
+            studentCourseRepository.saveAll(studentCourseEntityList);
+
+
+
+            //puting cgpa And sgpa
+            List<StudentCourseDO> studentCourseDoList1= new ArrayList<>();
+            for(int i=0;i<studentCourseDoList.size()-1;i++){
+                if(studentCourseDoList.get(i).getStudentid()!= studentCourseDoList.get(i+1).getStudentid()){
+                    studentCourseDoList1.add(studentCourseDoList.get(i));
+                }
+            }
+            studentCourseDoList1.add(studentCourseDoList.get(studentCourseDoList.size()-1));
+            System.out.println(studentCourseDoList1);
+            for(int i=0;i<studentCourseDoList1.size();i++) {
+
+                CgpaAndSgpaEntity cgpaAndSgpaEntity = new CgpaAndSgpaEntity();
+
+                cgpaAndSgpaEntity.setStudentid(studentRepository.getByRollnumber(studentCourseDoList1.get(i).getStudentid()));
+                if (sem == 1) {
+                    cgpaAndSgpaEntity.setSgpa1(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 2) {
+                    cgpaAndSgpaEntity.setSgpa2(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 3) {
+                    cgpaAndSgpaEntity.setSgpa3(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 4) {
+                    cgpaAndSgpaEntity.setSgpa4(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 5) {
+                    cgpaAndSgpaEntity.setSgpa5(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 6) {
+                    cgpaAndSgpaEntity.setSgpa6(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 7) {
+                    cgpaAndSgpaEntity.setSgpa7(studentCourseDoList1.get(i).getSgpa());
+                }
+                if (sem == 8) {
+                    cgpaAndSgpaEntity.setSgpa8(studentCourseDoList1.get(i).getSgpa());
+                }
+                cgpaAndSgpaEntity.setCgpa(studentCourseDoList1.get(i).getCgpa());
+                if(!cgpaAndSgpaRepository.existsBystudentid(cgpaAndSgpaEntity.getStudentid())) {
+                    cgpaAndSgpaRepository.save(cgpaAndSgpaEntity);
+                }
+                else
+                {
+                    CgpaAndSgpaEntity cgpaAndSgpaEntity2=  cgpaAndSgpaRepository.getBystudentid(cgpaAndSgpaEntity.getStudentid());
+                    if (sem == 1) {
+                        cgpaAndSgpaEntity2.setSgpa1(cgpaAndSgpaEntity.getSgpa1());
+                    }
+                    if (sem == 2) {
+                        cgpaAndSgpaEntity2.setSgpa2(cgpaAndSgpaEntity.getSgpa2());
+                    }
+                    if (sem == 3) {
+                        cgpaAndSgpaEntity2.setSgpa2(cgpaAndSgpaEntity.getSgpa3());
+                    }
+                    if (sem == 4) {
+                        cgpaAndSgpaEntity2.setSgpa4(cgpaAndSgpaEntity.getSgpa4());
+                    }
+                    if (sem == 5) {
+                        cgpaAndSgpaEntity2.setSgpa5(cgpaAndSgpaEntity.getSgpa5());
+                    }
+                    if (sem == 6) {
+                        cgpaAndSgpaEntity2.setSgpa6(cgpaAndSgpaEntity.getSgpa6());
+                    }
+                    if (sem == 7) {
+                        cgpaAndSgpaEntity2.setSgpa7(cgpaAndSgpaEntity.getSgpa7());
+                    }
+                    if (sem == 8) {
+                        cgpaAndSgpaEntity2.setSgpa8(cgpaAndSgpaEntity.getSgpa8());
+                    }
+                    cgpaAndSgpaEntity2.setCgpa(cgpaAndSgpaEntity.getCgpa());
+                    cgpaAndSgpaRepository.save(cgpaAndSgpaEntity2);
+                }
+
+            }
+
+
+
+
+        } catch (IOException e) {
+            throw new RuntimeException("fail to store excel data: " + e.getMessage());
+        }
+    }
+
+    public List<StudentDO> checkStudents(MultipartFile file, String batch,Long sem,String date,String regulation) {
+
+        try {
+
+            List<StudentDO> studentDoList = Helper.excelToDbcheckStudents(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,studentConvert,batch,sem,date,regulation);
+            return studentDoList;
+
+        } catch (IOException e) {
+            throw new RuntimeException("something went wrong . Try again. " + e.getMessage());
+        }
+    }
+
+
+    public List<StudentDO> checkStudents1(MultipartFile file, String batch,Long sem,String date,String regulation) {
+
+        try {
+
+            List<StudentDO> studentDoList = Helper.excelToDbcheckStudents1(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,studentConvert,batchRepository,batch,sem,date,regulation);
+            return studentDoList;
+
+        } catch (IOException e) {
+            throw new RuntimeException("something went wrong . Try again. " + e.getMessage());
+        }
+    }
+
 
     @Transactional
     public void saveadvsup(MultipartFile file, Long sem, String type,String data,String regulation) {
@@ -535,6 +676,14 @@ public class StudentCourseServices {
 
     }
 
+    public void updateStudentsBatch(List<StudentDO> studentDOList,String batch){
+            List<StudentEntity> studentEntityList=new ArrayList<>();
+            for(int h=0; h<studentDOList.size() ; h++){
+                studentEntityList.add(studentRepository.getByRollnumber(studentDOList.get(h).getRollnumber()));
+                studentEntityList.get(h).setBatchid(batchRepository.getByBatch(batch));
+            }
+            studentRepository.saveAll(studentEntityList);
+    }
         public void updateStudentCourse(StudentCourseDO studentCourseDO){
 
             if(studentCourseDO.getStudentid()==null||studentCourseDO.getStudentid().isEmpty()||studentCourseDO.getCourseid()==null||studentCourseDO.getCourseid().isEmpty())

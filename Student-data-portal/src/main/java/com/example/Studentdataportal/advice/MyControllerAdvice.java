@@ -72,7 +72,7 @@ public class MyControllerAdvice {
     }
     @ExceptionHandler(AlreadyEntryExistsException.class)
     public ResponseEntity<String> AlreadyEntrytExistsException(AlreadyEntryExistsException exc) {
-        return new ResponseEntity<>("already entry exists with this role number "+ exc.getString()+" and course id "+exc.getString1(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("already entry exists with this role number "+ exc.getString()+" and course id "+exc.getString1()+". Looks like uploading the results again.", HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(EmptyFieldException.class)
     public ResponseEntity<String> EmptyFieldException(EmptyFieldException exc) {
@@ -117,6 +117,24 @@ public class MyControllerAdvice {
     @ExceptionHandler(BatchReportException.class)
     public ResponseEntity<String> wrongNameException(BatchReportException exc) {
         return new ResponseEntity<>(exc.getString()+" batch is not a complited one " , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SGPAandCGPAcolumnNameErrorInExcelException.class)
+    public ResponseEntity<String> SGPAandCGPAcolumnNameErrorInExcelException() {
+        return new ResponseEntity<>(" SGPA or CGPA column in the excel has given wrong name  ", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(StudentFromOtherBatchExistsException.class)
+    public ResponseEntity<String> StudentFromOtherBatchExistsException() {
+        return new ResponseEntity<>("In the excel sheet students results of other batches exists , please do appropriate checks before uploading regular results ", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(AlreadySemesterResultsExistForGivenBatchException.class)
+    public ResponseEntity<String> AlreadySemesterResultsExistForGivenBatchException(AlreadySemesterResultsExistForGivenBatchException exc) {
+        return new ResponseEntity<>("semester results already exists ", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotAllStudentsresultsExistsInExcelException.class)
+    public ResponseEntity<String> NotAllStudentsresultsExistsInExcelException() {
+        return new ResponseEntity<>("Not all students results are given, check appropriate checks before uploading ", HttpStatus.BAD_REQUEST);
     }
 }
 

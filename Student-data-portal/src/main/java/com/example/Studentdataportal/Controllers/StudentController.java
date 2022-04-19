@@ -3,6 +3,7 @@ package com.example.Studentdataportal.Controllers;
 import com.example.Studentdataportal.DataObjects.BatchDO;
 import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Services.BatchService;
+import com.example.Studentdataportal.Services.StudentCourseServices;
 import com.example.Studentdataportal.Services.StudentServices;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.ResponseMessage;
@@ -22,6 +23,8 @@ public class StudentController {
     StudentServices studentservices;
     @Autowired
     BatchService batchService;
+    @Autowired
+    StudentCourseServices studentCourseServices;
 
 
 
@@ -64,7 +67,11 @@ public class StudentController {
          studentservices.updatestudentbyid(studentDO);
          return new ResponseEntity<>(HttpStatus.OK);
      }
-
+    @PutMapping("/updatestudentsbatch/{batch}")
+    public ResponseEntity<ResponseMessage> updateStudentsBatch(@RequestBody List<StudentDO> studentDOList,@PathVariable String batch){
+        studentCourseServices.updateStudentsBatch(studentDOList,batch);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
     @PostMapping("/upload")
