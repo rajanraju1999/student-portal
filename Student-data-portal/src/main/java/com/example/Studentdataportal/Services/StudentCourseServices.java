@@ -589,15 +589,17 @@ public class StudentCourseServices {
         List<StudentCourseEntity> studentCourseEntityList1= new ArrayList<>();
         for(int j=0;j<studentCourseEntityList.size();j++)
         {
+            System.out.println(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid));
             if(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid)&&studentCourseEntityList.get(j).getStudentid().getSection().equals(section)&& studentCourseEntityList.get(j).getSemester()==sem)
             {
-                studentCourseEntityList1.add(studentCourseEntityList.get(j));
+                studentCourseEntityList1.add(studentCourseEntityList.get(j)); 
             }
         }
 
         for(int i=0;i<studentCourseEntityList1.size();i++)
         {
-            studentCourseDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList.get(i)));
+            studentCourseDOList.add(studentCourseConvert.convert2StudentCourseDO(studentCourseEntityList1.get(i)));
+            System.out.println(studentCourseDOList.get(i));
         }
         return studentCourseDOList;
 

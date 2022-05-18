@@ -88,7 +88,7 @@ public class StudentCourseController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-    @GetMapping("/checkStudents/{id}/{id1}/{id2}")
+    @PostMapping("/checkStudents/{id}/{id1}/{id2}")
     public ResponseEntity<List<StudentDO>> checkStudents(@PathVariable("file") MultipartFile file,@PathVariable("id") String batch,@PathVariable("id1") Long sem,@PathVariable("id2")String dateString) {
         String message = "";
         if (Helper.hasExcelFormat(file)) {
@@ -108,7 +108,7 @@ public class StudentCourseController {
 
     }
 
-    @GetMapping("/checkStudents1/{id}/{id1}/{id2}")
+    @PostMapping("/checkStudents1/{id}/{id1}/{id2}")
     public ResponseEntity<List<StudentDO>> checkStudents1(@PathVariable("file") MultipartFile file,@PathVariable("id") String batch,@PathVariable("id1") Long sem,@PathVariable("id2")String dateString) {
         String message = "";
         if (Helper.hasExcelFormat(file)) {
