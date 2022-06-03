@@ -134,7 +134,15 @@ public class MyControllerAdvice {
 
     @ExceptionHandler(NotAllStudentsresultsExistsInExcelException.class)
     public ResponseEntity<String> NotAllStudentsresultsExistsInExcelException() {
-        return new ResponseEntity<>("Not all students results are given, check appropriate checks before uploading ", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Not all students results are given, pls Do check2 before uploading ", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(DeadlineErrorException.class)
+    public ResponseEntity<String> DeadlineErrorException() {
+        return new ResponseEntity<>("Ask admin for date extention ", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(noDataAvailableException.class)
+    public ResponseEntity<String> noDataAvailableException() {
+        return new ResponseEntity<>("no data available. ", HttpStatus.BAD_REQUEST);
     }
 }
 

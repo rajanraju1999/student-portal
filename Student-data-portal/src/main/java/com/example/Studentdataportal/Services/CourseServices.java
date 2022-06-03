@@ -2,10 +2,19 @@ package com.example.Studentdataportal.Services;
 
 import com.example.Studentdataportal.DataObjects.CourseDO;
 import com.example.Studentdataportal.DataObjects.RegulationDO;
+import com.example.Studentdataportal.DataObjects.StudentDO;
 import com.example.Studentdataportal.Entitis.CourseEntity;
+import com.example.Studentdataportal.Entitis.StudentCourseEntity;
+import com.example.Studentdataportal.Entitis.StudentEntity;
+import com.example.Studentdataportal.Repositorys.BatchRepository;
 import com.example.Studentdataportal.Repositorys.CourseRepository;
+import com.example.Studentdataportal.Repositorys.StudentCourseRepository;
+import com.example.Studentdataportal.Repositorys.StudentRepository;
 import com.example.Studentdataportal.Util.CourseConvert;
 import com.example.Studentdataportal.exception.*;
+import com.example.Studentdataportal.zattainmentmodule.DataObjects.AssignDO;
+import com.example.Studentdataportal.zattainmentmodule.Entity.AssignEntity;
+import com.example.Studentdataportal.zattainmentmodule.Repository.AssignRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +26,14 @@ public class CourseServices {
     CourseConvert courseConvert;
     @Autowired
     CourseRepository courseRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    StudentCourseRepository studentCourseRepository;
+    @Autowired
+    BatchRepository batchRepository;
+    @Autowired
+    AssignRepository assignRepository;
 
     public void createcourse(CourseDO courseDO)
     {
@@ -136,4 +153,64 @@ public class CourseServices {
         return courseDOList;
     }
 
+    public List<CourseDO> coursesToAssign(String batch){
+        Set<CourseDO> courses_Set = new HashSet<CourseDO>();
+
+        List<CourseEntity> courseEntityList = courseRepository.getAllByCourseRegulation(batchRepository.getByBatch(batch).getRegulation());
+        for(int i=0; i<courseEntityList.size() ; i++){
+            courses_Set.add(courseConvert.convert2CourseDO(courseEntityList.get(i)));
+        }
+
+        List<AssignEntity> assignEntityList = assignRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+        for(int i=0; i<assignEntityList.size() ; i++){
+            courses_Set.remove(assignEntityList.get(i).getCourseid());
+        }
+
+        List<CourseDO> courseDOList = new ArrayList<>();
+        for(CourseDO i: courses_Set){
+            courseDOList.add(i);
+        }
+        return courseDOList;
+    }
+    public List<CourseDO> coursesToExtendTime(String batch){
+        List<AssignEntity> assignEntityList = assignRepository.getAllByBatchidAndStatus(batchRepository.getByBatch(batch),"NA");
+        List<CourseDO> courseDOList = new ArrayList<>();
+        for(int i=0; i<assignEntityList.size() ; i++){
+            courseDOList.add(courseConvert.convert2CourseDO(assignEntityList.get(i).getCourseid()));
+        }
+        return courseDOList;
+    }
+
+    public List<CourseDO> coursesToDeleteAttainment(String batch){
+        List<AssignEntity> assignEntityList = assignRepository.getAllByBatchidAndStatus(batchRepository.getByBatch(batch),"UPLOADED");
+        List<CourseDO> courseDOList = new ArrayList<>();
+        for(int i=0; i<assignEntityList.size() ; i++){
+            courseDOList.add(courseConvert.convert2CourseDO(assignEntityList.get(i).getCourseid()));
+        }
+        return courseDOList;
+    }
+
+    public List<CourseDO> uploadedCourses(String batch)
+    {
+
+        /*if(!courseRepository.existsByCourseRegulation(reg))
+        {
+            throw new NoSuchElementException();
+        }*/
+
+        List<StudentEntity> studentEntities = studentRepository.getAllByBatchid(batchRepository.getByBatch(batch));
+        List<StudentCourseEntity> studentCourseEntityList = new ArrayList<>();
+        for(int i=0; i<studentEntities.size(); i++){
+            studentCourseEntityList.addAll(studentCourseRepository.getAllByStudentid(studentEntities.get(i)));
+        }
+        Set<CourseDO> courses_Set = new HashSet<CourseDO>();
+        for(int i=0 ;i<studentCourseEntityList.size(); i++){
+            courses_Set.add(courseConvert.convert2CourseDO(studentCourseEntityList.get(i).getCourseid()));
+        }
+        List<CourseDO> courseDOList = new ArrayList<>();
+        for(CourseDO i: courses_Set){
+            courseDOList.add(i);
+        }
+        return courseDOList;
+    }
 }

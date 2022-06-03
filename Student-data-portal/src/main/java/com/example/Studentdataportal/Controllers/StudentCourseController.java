@@ -8,6 +8,7 @@ import com.example.Studentdataportal.Repositorys.BatchRepository;
 import com.example.Studentdataportal.Services.StudentCourseServices;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.ResponseMessage;
+import com.example.Studentdataportal.exception.noDataAvailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/studentcourse")
 public class StudentCourseController {
@@ -88,14 +90,13 @@ public class StudentCourseController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(message));
     }
 
-    @PostMapping("/checkStudents/{id}/{id1}/{id2}")
-    public ResponseEntity<List<StudentDO>> checkStudents(@PathVariable("file") MultipartFile file,@PathVariable("id") String batch,@PathVariable("id1") Long sem,@PathVariable("id2")String dateString) {
+    @PostMapping("/checkStudents/{id}")
+    public ResponseEntity<List<StudentDO>> checkStudents(@PathVariable("file") MultipartFile file,@PathVariable("id") String batch) {
         String message = "";
         if (Helper.hasExcelFormat(file)) {
             //try {s
-            System.out.println(dateString);
             String regulation = batchRepository.getByBatch(batch).getRegulation();
-            List<StudentDO> studentDOList = studentCourseServices.checkStudents(file,batch,sem,dateString,regulation);
+            List<StudentDO> studentDOList = studentCourseServices.checkStudents(file,batch,regulation);
             return new ResponseEntity<>(studentDOList, HttpStatus.OK);
             // } //catch (Exception e) {
             //message = "Could not upload the file: " + file.getOriginalFilename() + "!";
@@ -108,14 +109,13 @@ public class StudentCourseController {
 
     }
 
-    @PostMapping("/checkStudents1/{id}/{id1}/{id2}")
-    public ResponseEntity<List<StudentDO>> checkStudents1(@PathVariable("file") MultipartFile file,@PathVariable("id") String batch,@PathVariable("id1") Long sem,@PathVariable("id2")String dateString) {
+    @PostMapping("/checkStudents1/{id}")
+    public ResponseEntity<List<StudentDO>> checkStudents1(@PathVariable("file") MultipartFile file,@PathVariable("id") String batch) {
         String message = "";
         if (Helper.hasExcelFormat(file)) {
             //try {s
-            System.out.println(dateString);
             String regulation = batchRepository.getByBatch(batch).getRegulation();
-            List<StudentDO> studentDOList = studentCourseServices.checkStudents1(file,batch,sem,dateString,regulation);
+            List<StudentDO> studentDOList = studentCourseServices.checkStudents1(file,batch,regulation);
             return new ResponseEntity<>(studentDOList, HttpStatus.OK);
             // } //catch (Exception e) {
             //message = "Could not upload the file: " + file.getOriginalFilename() + "!";
@@ -163,7 +163,7 @@ public class StudentCourseController {
 
                 List<StudentCourseDO> studentCourseDOList = studentCourseServices. getAllbybatchid(id);
                 if (studentCourseDOList.isEmpty()) {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                    throw new noDataAvailableException();
                 }
                 return new ResponseEntity<>(studentCourseDOList, HttpStatus.OK);
 
@@ -174,7 +174,7 @@ public class StudentCourseController {
 
         List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsectionandsemester(id,id2,id1);
         if (studentCourseDOList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new noDataAvailableException();
         }
         return new ResponseEntity<>(studentCourseDOList, HttpStatus.OK);
 
@@ -184,7 +184,7 @@ public class StudentCourseController {
 
         List<StudentCourseDO> studentCourseDOList = studentCourseServices.getAllbybatchidandsemester(id,id1);
         if (studentCourseDOList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new noDataAvailableException();
         }
         return new ResponseEntity<>(studentCourseDOList, HttpStatus.OK);
 

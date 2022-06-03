@@ -7,14 +7,15 @@ import com.example.Studentdataportal.Repositorys.BatchRepository;
 import com.example.Studentdataportal.Repositorys.CourseRepository;
 import com.example.Studentdataportal.Util.CourseConvert;
 import com.example.Studentdataportal.Util.Helper;
-import com.example.Studentdataportal.exception.AlreadyCourseNameExistForGivenBatchException;
-import com.example.Studentdataportal.exception.BatchDoesNotExistException;
-import com.example.Studentdataportal.exception.NoCourseNameAndRegulationException;
-import com.example.Studentdataportal.exception.NoSuchCourseNameExistForGivenBatchException;
+import com.example.Studentdataportal.exception.*;
+import com.example.Studentdataportal.zattainmentmodule.DataObjects.AssignDO;
 import com.example.Studentdataportal.zattainmentmodule.DataObjects.AttainmentDO;
 import com.example.Studentdataportal.zattainmentmodule.DataObjects.AttainmentReportDO;
+import com.example.Studentdataportal.zattainmentmodule.Entity.AssignEntity;
 import com.example.Studentdataportal.zattainmentmodule.Entity.AttainmentEntity;
+import com.example.Studentdataportal.zattainmentmodule.Repository.AssignRepository;
 import com.example.Studentdataportal.zattainmentmodule.Repository.AttainmentRepository;
+import com.example.Studentdataportal.zattainmentmodule.Util.AssignConvert;
 import com.example.Studentdataportal.zattainmentmodule.Util.AttainmentConvert;
 import com.example.Studentdataportal.zattainmentmodule.Util.NewHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -37,6 +40,10 @@ public class AttainmentServices {
     CourseConvert courseConvert;
     @Autowired
     AttainmentRepository attainmentRepository;
+    @Autowired
+    AssignConvert assignConvert;
+    @Autowired
+    AssignRepository assignRepository;
 
     public void save(MultipartFile file, String batch, String courseName,String regulation) {
 
@@ -54,6 +61,17 @@ public class AttainmentServices {
                 throw new AlreadyCourseNameExistForGivenBatchException(batch,courseName);
             }
 
+            AssignEntity assignEntity = assignRepository.getByBatchidAndCourseid(batchRepository.getByBatch(batch),courseRepository.getByCourseName(courseName));
+
+            //SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = new Date();
+            //System.out.println(formatter.format(date));
+
+            if(!assignEntity.getDate().after(date)){
+                throw new DeadlineErrorException();
+            }
+
+
             List<AttainmentDO> attainmentDOList = NewHelper.excelToDb(file.getInputStream(),batchRepository,courseRepository,batch,courseName,regulation);
             // System.out.println(studentCourseEntityList);
             List<AttainmentEntity> attainmentEntityList=new ArrayList<>();
@@ -61,6 +79,10 @@ public class AttainmentServices {
                 attainmentEntityList.add(attainmentConvert.convert2AttainmentEntity(attainmentDOList.get(i)));
             }
             attainmentRepository.saveAll(attainmentEntityList);
+
+            assignEntity.setStatus("UPLOADED");
+            assignRepository.save(assignEntity);
+
         } catch (IOException e) {
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
         }
@@ -77,6 +99,11 @@ public class AttainmentServices {
         }
         System.out.println(batchRepository.getByBatch(batch)+" "+courseRepository.getByCourseName(courseName));
         attainmentRepository.deleteAllByBatchidAndCourseid(batchRepository.getByBatch(batch),courseRepository.getByCourseName(courseName));
+
+        AssignEntity assignEntity = assignRepository.getByBatchidAndCourseid(batchRepository.getByBatch(batch),courseRepository.getByCourseName(courseName));
+        assignEntity.setStatus("NA");
+        assignRepository.save(assignEntity);
+
     }
 
     public List<AttainmentDO> getAllAttinmentsOfBatch(String batch){
@@ -326,6 +353,18 @@ public class AttainmentServices {
         attainmentReportDOList.add(attainmentReportDO);
 
         return attainmentReportDOList;
+    }
+
+    public void assignCourse(AssignDO assignDO){
+        AssignEntity assignEntity = assignConvert.convert2AssignEntity(assignDO);
+        assignRepository.save(assignEntity);
+    }
+
+    public void extendTime(AssignDO assignDO){
+        AssignEntity assignEntity = assignRepository.getByBatchidAndCourseid(batchRepository.getByBatch(assignDO.getBatch()),courseRepository.getByCourseid(assignDO.getCourseId()));
+        assignEntity.setDate(assignDO.getDate());
+        assignEntity.setTime(assignDO.getTime());
+        assignRepository.save(assignEntity);
     }
 
 }

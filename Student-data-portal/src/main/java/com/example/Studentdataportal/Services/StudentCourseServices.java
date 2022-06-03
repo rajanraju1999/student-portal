@@ -7,6 +7,7 @@ import com.example.Studentdataportal.Util.*;
 import com.example.Studentdataportal.exception.EmptyFieldException;
 import com.example.Studentdataportal.exception.MultipleAttemptsPresentException;
 import com.example.Studentdataportal.exception.NoDataSentException;
+import com.example.Studentdataportal.exception.noDataAvailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -273,11 +274,11 @@ public class StudentCourseServices {
         }
     }
 
-    public List<StudentDO> checkStudents(MultipartFile file, String batch,Long sem,String date,String regulation) {
+    public List<StudentDO> checkStudents(MultipartFile file, String batch,String regulation) {
 
         try {
 
-            List<StudentDO> studentDoList = Helper.excelToDbcheckStudents(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,studentConvert,batch,sem,date,regulation);
+            List<StudentDO> studentDoList = Helper.excelToDbcheckStudents(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,studentConvert,batch,regulation);
             return studentDoList;
 
         } catch (IOException e) {
@@ -286,11 +287,11 @@ public class StudentCourseServices {
     }
 
 
-    public List<StudentDO> checkStudents1(MultipartFile file, String batch,Long sem,String date,String regulation) {
+    public List<StudentDO> checkStudents1(MultipartFile file, String batch,String regulation) {
 
         try {
 
-            List<StudentDO> studentDoList = Helper.excelToDbcheckStudents1(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,studentConvert,batchRepository,batch,sem,date,regulation);
+            List<StudentDO> studentDoList = Helper.excelToDbcheckStudents1(file.getInputStream(),studentRepository,courseRepository,studentCourseRepository,studentConvert,batchRepository,batch,regulation);
             return studentDoList;
 
         } catch (IOException e) {
@@ -587,9 +588,11 @@ public class StudentCourseServices {
         List<StudentCourseDO> studentCourseDOList =new ArrayList<>();
         List<StudentCourseEntity> studentCourseEntityList = studentCourseRepository.findAll();
         List<StudentCourseEntity> studentCourseEntityList1= new ArrayList<>();
+
+
         for(int j=0;j<studentCourseEntityList.size();j++)
         {
-            System.out.println(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid));
+            //System.out.println(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid));
             if(studentCourseEntityList.get(j).getStudentid().getBatchid().getBatch().equals(batchid)&&studentCourseEntityList.get(j).getStudentid().getSection().equals(section)&& studentCourseEntityList.get(j).getSemester()==sem)
             {
                 studentCourseEntityList1.add(studentCourseEntityList.get(j)); 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/course")
 public class CourseController {
@@ -71,5 +72,28 @@ public class CourseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/coursesToAssign/{batch}")
+    public List<CourseDO> coursesToAssign(@PathVariable String batch){
+        List<CourseDO> courseDOList =  courseServices.coursesToAssign(batch);
+        return courseDOList;
+    }
 
+    @GetMapping("/coursesToExtendTime/{batch}")
+    public List<CourseDO> coursesToExtendTime(@PathVariable String batch){
+        List<CourseDO> courseDOList =  courseServices.coursesToExtendTime(batch);
+        return courseDOList;
+    }
+
+    @GetMapping("/coursesToDeleteAttainment/{batch}")
+    public List<CourseDO> coursesToDeleteAttainment(@PathVariable String batch){
+        List<CourseDO> courseDOList =  courseServices.coursesToDeleteAttainment(batch);
+        return courseDOList;
+    }
+
+    @GetMapping("/getAllResultsUploadedCourses/{batch}")
+    public ResponseEntity<List<CourseDO>> getAllResultsUploadedCourses(@PathVariable String batch)
+    {
+        List<CourseDO> courseDOList = courseServices.uploadedCourses(batch);
+        return new ResponseEntity<>(courseDOList,HttpStatus.OK);
+    }
 }

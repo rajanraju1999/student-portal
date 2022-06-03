@@ -249,7 +249,7 @@ public class Helper {
 
 
     }
-    public static List<StudentDO> excelToDbcheckStudents(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry,StudentConvert studentConvert,String batch, Long sem, String date,String regulation) {
+    public static List<StudentDO> excelToDbcheckStudents(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry,StudentConvert studentConvert,String batch,String regulation) {
 
         DataFormatter formatter = new DataFormatter();
 
@@ -337,7 +337,7 @@ public class Helper {
 
     }
 
-    public static List<StudentDO> excelToDbcheckStudents1(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry,StudentConvert studentConvert,BatchRepository batchRepository,String batch, Long sem, String date,String regulation) {
+    public static List<StudentDO> excelToDbcheckStudents1(InputStream is, StudentRepository studentRepository, CourseRepository courseRepository, StudentCourseRepository studentCourseRepositiry,StudentConvert studentConvert,BatchRepository batchRepository,String batch, String regulation) {
 
         DataFormatter formatter = new DataFormatter();
 

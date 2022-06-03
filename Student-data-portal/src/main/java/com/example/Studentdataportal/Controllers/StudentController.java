@@ -7,6 +7,7 @@ import com.example.Studentdataportal.Services.StudentCourseServices;
 import com.example.Studentdataportal.Services.StudentServices;
 import com.example.Studentdataportal.Util.Helper;
 import com.example.Studentdataportal.Util.ResponseMessage;
+import com.example.Studentdataportal.exception.noDataAvailableException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/student")
 public class StudentController {
@@ -99,7 +101,7 @@ public class StudentController {
 
         List<StudentDO> studentDOList = studentservices.getAllwithoutbacklogs(id);
         if (studentDOList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new noDataAvailableException();
         }
         return new ResponseEntity<>(studentDOList, HttpStatus.OK);
     }
@@ -109,7 +111,7 @@ public class StudentController {
 
         List<StudentDO> studentDOList = studentservices.getAllPasswithbacklogs(id);
         if (studentDOList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new noDataAvailableException();
         }
         return new ResponseEntity<>(studentDOList, HttpStatus.OK);
 
@@ -122,7 +124,7 @@ public class StudentController {
 
         List<StudentDO> studentDOList = studentservices.getAllstillwithbacklogs(id);
         if (studentDOList.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new noDataAvailableException();
         }
         return new ResponseEntity<>(studentDOList, HttpStatus.OK);
 
